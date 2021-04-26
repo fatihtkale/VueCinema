@@ -12,9 +12,9 @@ router.post('/', async function(req, res, next) {
         username: req.body.username,
         password: bcrypt.hashSync(req.body.password, 8),
         email: req.body.email,
-        phoneNumber: req.body.phone
+        phoneNumber: req.body.phoneNumber
     })
-    let token = jwt.sign({ id: NewUser.uuid }, config.secret, { expiresIn: 86400 });
+    let token = jwt.sign({ id: NewUser.userid }, config.secret, { expiresIn: 86400 });
     res.status(200).send({ user: NewUser, token: token });
     console.log(config.secret)
 });
