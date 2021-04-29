@@ -1,10 +1,16 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
   <router-view/>
 </template>
 
 <style>
+.bg {
+  background-color: #1B1E1F;
+}
+.nav{
+  background-color: #1A1C1E;
+}
+.card {
+  background-color: #181A1B;
+  border: 1px solid #35393B;
+}
 </style>
