@@ -7,15 +7,25 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Userlogin.belongsTo(models.User, {
         foreignKey: {
-            allowNull: false,
-            name: 'userid'
+          allowNull: false,
+          name: 'userid'
         }
     })
     }
   };
   Userlogin.init({
-    username: DataTypes.STRING,
-    password: DataTypes.STRING
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Userlogin',

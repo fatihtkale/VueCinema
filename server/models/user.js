@@ -22,18 +22,26 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             primaryKey: true
         },
-        username: {
+        firstname: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        email: {
+        lastname: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        phoneNumber: {
+        region: {
             type: DataTypes.STRING,
             allowNull: false
-        }
+        },
+        admin: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false
+        },
+        birthday:{
+            type: DataTypes.DATEONLY,
+            allowNull: false
+        },
     }, {
         sequelize,
         modelName: 'User',

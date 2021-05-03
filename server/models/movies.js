@@ -21,22 +21,30 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             type: DataTypes.STRING
         },
-        movieRating: {
+        movieDescription: {
             allowNull: false,
             type: DataTypes.STRING
+        },
+        movieRating: {
+            allowNull: false,
+            type: DataTypes.INTEGER
         },
         movieGenre: {
             allowNull: false,
             type: DataTypes.STRING
         },
-        movieDescription: {
+        movieReleaseYear: {
             allowNull: false,
-            type: DataTypes.STRING
+            type: DataTypes.INTEGER
+        },
+        movieAgeLimit: {
+            allowNull: false,
+            type: DataTypes.BOOLEAN
         },
         movieTime: {
             allowNull: false,
-            type: DataTypes.STRING
-        }
+            type: DataTypes.DATE
+        },
     }, {
         sequelize,
         modelName: 'Movies',

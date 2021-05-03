@@ -9,7 +9,7 @@ var { User } = require('../models')
 
 router.post('/', async function(req, res, next) {
     let NewUser = await User.create({
-        username: req.body.username,
+        first: req.body.username,
         password: bcrypt.hashSync(req.body.password, 8),
         email: req.body.email,
         phoneNumber: req.body.phoneNumber
