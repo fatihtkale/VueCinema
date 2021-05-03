@@ -21,8 +21,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER
         },
         movieProfit: DataTypes.STRING,
-        lastShow: DataTypes.STRING,
-        nextShow: DataTypes.STRING
+        movieLastShow: DataTypes.STRING,
+        movieNextShow: DataTypes.STRING,
+        movieProfit: DataTypes.STRING
     }, {
         sequelize,
         modelName: 'MovieAdmins',
