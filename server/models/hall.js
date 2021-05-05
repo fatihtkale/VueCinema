@@ -10,19 +10,16 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
     }
   };
   Hall.init({
-    hallID: {
+    hallId: {
       primaryKey: true,
       autoIncrement: true,
       type: DataTypes.INTEGER
-  },
-    TheaterID: DataTypes.STRING,
-    RowID: DataTypes.STRING,
-    qty: DataTypes.STRING,
-    Availability: DataTypes.STRING
+    },
+    qty: DataTypes.INTEGER,
+    availability: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Hall',

@@ -3,8 +3,10 @@
     <div class="login-body">
       <div class="login-icon">TC</div>
       <p class="text">Brugernavn</p>
-      <input class="input-field" type="text">
+      <input name="username" class="input-field" type="text">
       <p class="text">Adgangskode</p>
+      <input class="input-field" type="password">
+      <p class="text">Indtast Adgangskode Igen</p>
       <input class="input-field" type="password">
       <button class="button" type="submit">Login</button>
       <div class="login-footer">
@@ -34,13 +36,13 @@ export default {
   padding: 25px 44px;
 }
 .login-body{
-  box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
   color: white;
+  position: relative;
 }
 .login-icon{
   text-align: center;
-  font-size: 48px;
+  font-size: 69px;
   font-weight: bold;
   color: #51B973;
 }
@@ -53,13 +55,12 @@ export default {
   border-radius: 5px;
   outline: none;
   width: 100%;
-  margin-right: 80px;
+  box-sizing: border-box
 }
 .text{
   font-size: 20px;
-  font-weight: 400;
+  font-weight: normal;
   margin-top: 30px;
-  padding-bottom: 10px;
 }
 .button{
   width: 100%;
@@ -70,6 +71,7 @@ export default {
   color: white;
   font-size: 20px;
   margin-top: 60px;
+  margin-right: 80px;
 }
 .login-footer {
   display: flex;

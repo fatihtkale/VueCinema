@@ -39,9 +39,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         movieAgeLimit: {
             allowNull: false,
-            type: DataTypes.BOOLEAN
+            type: DataTypes.STRING
         },
-        movieTime: {
+        movieNextShow: {
             allowNull: false,
             type: DataTypes.DATE
         },

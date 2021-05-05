@@ -14,13 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   VipRows.init({
-    vipRowID: {
+    vipRowId: {
       primaryKey: true,
       autoIncrement: true,
       type: DataTypes.INTEGER
-  },
-    seat: DataTypes.STRING,
-    Availability: DataTypes.STRINGs
+    },
+    seat: DataTypes.INTEGER,
+    availability: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'VipRows',

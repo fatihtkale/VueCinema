@@ -13,4 +13,7 @@
   background-color: #181A1B;
   border: 1px solid #35393B;
 }
+html, body{
+  background-color: #171717;
+}
 </style>

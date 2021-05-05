@@ -9,21 +9,21 @@ module.exports = (sequelize, DataTypes) => {
             MovieAdmins.belongsTo(models.Movies, {
                 foreignKey: {
                     allowNull: false,
-                    name: 'MoviesId'
+                    name: 'moviesId'
                 }
             })
         }
     };
     MovieAdmins.init({
-        AdminId: {
+        adminId: {
             primaryKey: true,
             autoIncrement: true,
             type: DataTypes.INTEGER
         },
-        movieProfit: DataTypes.STRING,
-        movieLastShow: DataTypes.STRING,
-        movieNextShow: DataTypes.STRING,
-        movieProfit: DataTypes.STRING
+        movieView: DataTypes.INTEGER,
+        movieLastShow: DataTypes.DATE,
+        movieNextShow: DataTypes.DATE,
+        movieProfit: DataTypes.INTEGER
     }, {
         sequelize,
         modelName: 'MovieAdmins',

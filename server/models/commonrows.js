@@ -14,19 +14,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   CommonRows.init({
-    rowID: {
+    rowId: {
       primaryKey: true,
       autoIncrement: true,
       type: DataTypes.INTEGER
-  },
+    },
     seat: {
       allowNull: false,
-      type: DataTypes.INTEGER
-  },
-    Availability: {
+      type: DataTypes.STRING
+    },
+    availability: {
       allowNull: false,
-      type: DataTypes.INTEGER
-  }
+      type: DataTypes.BOOLEAN
+    }
   }, {
     sequelize,
     modelName: 'CommonRows',

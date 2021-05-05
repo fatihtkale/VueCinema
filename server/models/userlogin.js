@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Userlogin.belongsTo(models.User, {
         foreignKey: {
-          allowNull: false,
+          allowNull: true,
           name: 'userid'
         }
     })

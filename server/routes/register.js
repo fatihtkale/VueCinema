@@ -5,18 +5,28 @@ const bcrypt = require('bcrypt');
 const config = require('../config')
 
 
-var { User } = require('../models')
+var { User, Userlogin } = require('../models')
 
 router.post('/', async function(req, res, next) {
-    let NewUser = await User.create({
-        first: req.body.username,
-        password: bcrypt.hashSync(req.body.password, 8),
-        email: req.body.email,
-        phoneNumber: req.body.phoneNumber
+    var date = new Date();
+    let newUser = await User.create({
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        region: req.body.region,
+        admin: false,
+        birthday: date
     })
-    let token = jwt.sign({ id: NewUser.userid }, config.secret, { expiresIn: 86400 });
-    res.status(200).send({ user: NewUser, token: token });
-    console.log(config.secret)
+
+    let newUserLogin = await Userlogin.create({
+        username: req.body.username,
+        email: req.body.email,
+        password: bcrypt.hashSync(req.body.password, 8)
+    })
+    
+    let token = jwt.sign({ newUser, newUserLogin }, config.secret, { expiresIn: 86400 });
+    
+    res.status(200).send({ token: token });
+
 });
 
 module.exports = router;

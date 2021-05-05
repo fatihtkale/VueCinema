@@ -10,24 +10,34 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
-      Theater.belongsTo(models.RowID, {
+      Theater.belongsTo(models.CommonRows, {
         foreignKey: {
-          allowNull: false,
-          name: 'RowID'
+          name: 'rowId',
+          allowNull: false
+        }
+      })
+      
+      Theater.belongsTo(models.VipRows, {
+        foreignKey: {
+          name: 'vipRowId',
+          allowNull: false
+        }
+      })
+      
+      Theater.belongsTo(models.Hall,{
+        foreignKey: {
+          name: 'hallId',
+          allowNull: false
         }
       })
     }
   };
   Theater.init({
-    TheaterID:{
+    theaterId:{
       primaryKey: true,
       autoIncrement: true,
       type: DataTypes.INTEGER
-  },
-    HallID: DataTypes.STRING,
-    RowID: DataTypes.STRING,
-    VipRowID: DataTypes.STRING
+    }
   }, {
     sequelize,
     modelName: 'Theater',
