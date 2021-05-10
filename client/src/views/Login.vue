@@ -8,7 +8,7 @@
       <input class="input-field" type="password">
       <button class="button" type="submit">Login</button>
       <div class="login-footer">
-        <router-link to="#">Nyt login</router-link>
+        <router-link to="/register">Nyt login</router-link>
         <router-link to="#">Glemt Adgangskode</router-link>
       </div>
     </div>
@@ -54,12 +54,12 @@ export default {
   outline: none;
   width: 100%;
   margin-right: 80px;
+  box-sizing: border-box;
 }
 .text{
   font-size: 20px;
   font-weight: 400;
   margin-top: 30px;
-  padding-bottom: 10px;
 }
 .button{
   width: 100%;

@@ -4,16 +4,14 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const config = require('../config')
 
-
 var { User, Userlogin } = require('../models')
 
 router.post('/', async function(req, res, next) {
     var date = new Date();
+
     let newUser = await User.create({
         firstname: req.body.firstname,
         lastname: req.body.lastname,
-        region: req.body.region,
-        admin: false,
         birthday: date
     })
 
@@ -25,8 +23,7 @@ router.post('/', async function(req, res, next) {
     
     let token = jwt.sign({ newUser, newUserLogin }, config.secret, { expiresIn: 86400 });
     
-    res.status(200).send({ token: token });
-
+    res.status(200).send({ token });
 });
 
 module.exports = router;

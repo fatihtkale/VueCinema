@@ -1,16 +1,35 @@
 <template>
-  <form class="form" method="post">
+  <form class="form" v-on:submit.prevent="onSubmit">
     <div class="login-body">
-      <div class="login-icon">TC</div>
-      <p class="text">Brugernavn</p>
-      <input name="username" class="input-field" type="text">
-      <p class="text">Adgangskode</p>
-      <input class="input-field" type="password">
-      <p class="text">Indtast Adgangskode Igen</p>
-      <input class="input-field" type="password">
-      <button class="button" type="submit">Login</button>
+      <div class="login-icon">Tec & Chill</div>
+
+      <div v-if="passwordVerify == false && email.length > 0">
+        <h1 style="text-align: center">Kodeord matcher ikke</h1>
+      </div>
+
+      <div v-if="validateEmail == false && password.length > 0 && password2.length > 0">
+        <h1 style="text-align: center">Invalid email</h1>
+      </div>
+      
+      <input placeholder="Brugernavn" name="username" class="input-field" type="text">
+      
+      <input v-on:blur="validateEmail" v-model="email" placeholder="Email" name="username" class="input-field" type="text">
+      
+      <input placeholder="Navn" name="firstname" class="input-field" type="text">
+      
+      <input placeholder="Efternavn" name="lastname" class="input-field" type="text">
+
+      <input v-model="password" placeholder="Kodeord" class="input-field" type="password">
+
+      <input v-on:blur="passwordVerify" v-model="password2" placeholder="indtast kodeord igen" class="input-field" type="password">
+
+      <p style="margin-left: 10px;">Fødselsdag<input style="margin: 0; display:flex; margin-top: 10px;" class="input-field" type="date"></p>
+
+      <button class="button" v-if="passwordVerify == true && validateEmail == true" type="submit">Login</button>
+      <button class="button red" v-else disabled type="submit">Login</button>
+
       <div class="login-footer">
-        <router-link to="#">Nyt login</router-link>
+        <router-link to="login">Allerede bruger?</router-link>
         <router-link to="#">Glemt Adgangskode</router-link>
       </div>
     </div>
@@ -18,8 +37,28 @@
 </template>
 
 <script>
+import { computed, ref } from 'vue'
 export default {
+  setup(){
+    var password = ref("");
+    var password2 = ref("");
+    var email = ref("");
 
+    const validateEmail = computed(() => {
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email.value).toLowerCase());
+    })
+
+    const passwordVerify = computed(() => {
+      return password.value == password2.value && password.value.length != 0 && password2.value.length != 0;
+    })
+
+    function onSubmit(){
+      console.log("hi")
+    }
+
+    return { password, password2, email, validateEmail, passwordVerify, onSubmit }
+  }
 }
 </script>
 
@@ -39,6 +78,11 @@ export default {
   font-family: 'Poppins', sans-serif;
   color: white;
   position: relative;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  align-content: center
 }
 .login-icon{
   text-align: center;
@@ -47,20 +91,22 @@ export default {
   color: #51B973;
 }
 .input-field{
-  padding: 10px;
+  padding: 8px;
   font-size: 20px;
   color: white;
   background-color: #3F3F3F;
   border: 2px solid #707070;
   border-radius: 5px;
   outline: none;
-  width: 100%;
-  box-sizing: border-box
+  flex: 1 0 auto;
+  box-sizing: border-box;
+  margin: 10px
 }
 .text{
   font-size: 20px;
   font-weight: normal;
-  margin-top: 30px;
+  margin: 8px 0;
+  display: inline-block;
 }
 .button{
   width: 100%;
@@ -71,7 +117,7 @@ export default {
   color: white;
   font-size: 20px;
   margin-top: 60px;
-  margin-right: 80px;
+  cursor:pointer
 }
 .login-footer {
   display: flex;
@@ -84,10 +130,16 @@ export default {
 .login-footer a{
   font-size: 20px;
   text-decoration: none;
-  color: #3F3F3F;
+  color: #5a5a5a;
   margin-top: 60px;
   margin-bottom: 11px;
 }
+.red {
+  background-color: #E74C3C;
+  border-color: #ca4334;
+  cursor:no-drop
+}
+
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (max-width : 425px){
   .form{

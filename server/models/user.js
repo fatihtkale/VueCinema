@@ -22,13 +22,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        region: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         admin: {
             type: DataTypes.BOOLEAN,
-            allowNull: false
+            allowNull: true
         },
         birthday:{
             type: DataTypes.DATEONLY,
