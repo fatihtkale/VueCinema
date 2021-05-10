@@ -8,8 +8,8 @@
       <input class="input-field" type="password">
       <button class="button" type="submit">Login</button>
       <div class="login-footer">
-        <router-link to="/register">Nyt login</router-link>
-        <router-link to="#">Glemt Adgangskode</router-link>
+        <router-link to="/register">Ny Bruger?</router-link>
+        <router-link to="#">Glemt Adgangskode?</router-link>
       </div>
     </div>
   </form>

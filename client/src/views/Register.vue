@@ -3,29 +3,29 @@
     <div class="login-body">
       <div class="login-icon">Tec & Chill</div>
 
-      <div v-if="passwordVerify == false && email.length > 0">
+      <div v-if="passwordVerify == false && password.length != 0 && password2.length != 0 ">
         <h1 style="text-align: center">Kodeord matcher ikke</h1>
       </div>
 
-      <div v-if="validateEmail == false && password.length > 0 && password2.length > 0">
+      <div v-if="validateEmail == false && email.length > 0">
         <h1 style="text-align: center">Invalid email</h1>
       </div>
       
-      <input placeholder="Brugernavn" name="username" class="input-field" type="text">
+      <input v-model="username" placeholder="Brugernavn" name="username" class="input-field" type="text">
       
-      <input v-on:blur="validateEmail" v-model="email" placeholder="Email" name="username" class="input-field" type="text">
+      <input v-on:blur="validateEmail" v-model="email" placeholder="Email" name="email" class="input-field" type="text">
       
-      <input placeholder="Navn" name="firstname" class="input-field" type="text">
+      <input v-model="firstname" placeholder="Navn" name="firstname" class="input-field" type="text">
       
-      <input placeholder="Efternavn" name="lastname" class="input-field" type="text">
+      <input v-model="lastname" placeholder="Efternavn" name="lastname" class="input-field" type="text">
 
-      <input v-model="password" placeholder="Kodeord" class="input-field" type="password">
+      <input v-model="password" placeholder="Kodeord" name="password" class="input-field" type="password">
 
       <input v-on:blur="passwordVerify" v-model="password2" placeholder="indtast kodeord igen" class="input-field" type="password">
 
-      <p style="margin-left: 10px;">Fødselsdag<input style="margin: 0; display:flex; margin-top: 10px;" class="input-field" type="date"></p>
+      <p style="margin-left: 10px;">Fødselsdag<input v-model="date" style="margin: 0; display:flex; margin-top: 10px;" class="input-field" type="date"></p>
 
-      <button class="button" v-if="passwordVerify == true && validateEmail == true" type="submit">Login</button>
+      <button class="button" v-if="checkALl" type="submit">Login</button>
       <button class="button red" v-else disabled type="submit">Login</button>
 
       <div class="login-footer">
@@ -40,9 +40,13 @@
 import { computed, ref } from 'vue'
 export default {
   setup(){
+    var username = ref("");
+    var email = ref("");
+    var firstname = ref("");
+    var lastname = ref("");
     var password = ref("");
     var password2 = ref("");
-    var email = ref("");
+    var date = ref("");
 
     const validateEmail = computed(() => {
       const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -53,11 +57,16 @@ export default {
       return password.value == password2.value && password.value.length != 0 && password2.value.length != 0;
     })
 
-    function onSubmit(){
-      console.log("hi")
+    const checkALl = computed(() => {
+      return username.value.length != 0 && email.value.length != 0 && firstname.value.length != 0 && lastname.value.length != 0 && passwordVerify.value == true && validateEmail.value == true && date.value != 0;
+    })
+
+    function onSubmit(e){
+      console.log(date.value)
+      console.log(e.target.username.value)
     }
 
-    return { password, password2, email, validateEmail, passwordVerify, onSubmit }
+    return { password, password2, email, validateEmail, passwordVerify, onSubmit, username, firstname, lastname, date, checkALl }
   }
 }
 </script>
