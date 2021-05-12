@@ -86,7 +86,7 @@ export default {
           toast.success('Registeret!')
           router.push("login")
         }else{
-          toast.error('Bruger eksistere allerede!')
+          toast.error(response.data.status)
         }
         
       }).catch(error => {

@@ -1,15 +1,16 @@
 var express = require('express');
 var router = express.Router();
 const dayjs = require('dayjs') 
-
 const bcrypt = require('bcrypt');
+
+const { Op } = require("sequelize");
 
 var { User, Userlogin } = require('../models')
 
 // Create User
 router.post('/', async function(req, res, next) {
 
-    await Userlogin.findOne({ where: { username: req.body.username } })
+    await Userlogin.findOne({ where: { [Op.or]:[ {username: req.body.username}, {email: req.body.email} ]} })
     .then(async function (users) {
         if (users) {
             return res.send({ status: 'User already exists.' });
