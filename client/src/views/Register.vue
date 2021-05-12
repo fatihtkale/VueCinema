@@ -3,27 +3,19 @@
     <div class="login-body">
       <div class="login-icon">Tec & Chill</div>
 
-      <div v-if="passwordVerify == false && password.length != 0 && password2.length != 0 ">
-        <h1 style="text-align: center">Kodeord matcher ikke</h1>
-      </div>
-
-      <div v-if="validateEmail == false && email.length > 0">
-        <h1 style="text-align: center">Invalid email</h1>
-      </div>
+      <input v-model="user.username" placeholder="Brugernavn" name="username" class="input-field" type="text">
       
-      <input v-model="username" placeholder="Brugernavn" name="username" class="input-field" type="text">
+      <input @blur="validateEmail" v-model="user.email" placeholder="Email" name="email" class="input-field" type="text">
       
-      <input v-on:blur="validateEmail" v-model="email" placeholder="Email" name="email" class="input-field" type="text">
+      <input v-model="user.firstname" placeholder="Navn" name="firstname" class="input-field" type="text">
       
-      <input v-model="firstname" placeholder="Navn" name="firstname" class="input-field" type="text">
-      
-      <input v-model="lastname" placeholder="Efternavn" name="lastname" class="input-field" type="text">
+      <input v-model="user.lastname" placeholder="Efternavn" name="lastname" class="input-field" type="text">
 
-      <input v-model="password" placeholder="Kodeord" name="password" class="input-field" type="password">
+      <input @blur="passwordVerify" v-model="user.password" placeholder="Kodeord" name="password" class="input-field" type="password">
 
-      <input v-on:blur="passwordVerify" v-model="password2" placeholder="indtast kodeord igen" class="input-field" type="password">
+      <input @blur="passwordVerify" v-model="user.password2" placeholder="indtast kodeord igen" class="input-field" type="password">
 
-      <p style="margin-left: 10px;">Fødselsdag<input v-model="date" style="margin: 0; display:flex; margin-top: 10px;" class="input-field" type="date"></p>
+      <p style="margin-left: 10px;">Fødselsdag<input v-model="user.date" name="birthday" style="margin: 0; display:flex; margin-top: 10px;" class="input-field" type="date"></p>
 
       <button class="button" v-if="checkALl" type="submit">Login</button>
       <button class="button red" v-else disabled type="submit">Login</button>
@@ -37,36 +29,75 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
+import { computed, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
+import dayjs from 'dayjs'
+import { useToast } from "vue-toastification";
+
 export default {
   setup(){
-    var username = ref("");
-    var email = ref("");
-    var firstname = ref("");
-    var lastname = ref("");
-    var password = ref("");
-    var password2 = ref("");
-    var date = ref("");
+    const router = useRouter()
+    const toast = useToast();
 
-    const validateEmail = computed(() => {
+    let user = reactive({
+      username: "",
+      email: "",
+      firstname: "",
+      lastname: "",
+      password: "",
+      password2: "",
+      date: ""
+    })
+
+    const validateEmail = () => {
       const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(String(email.value).toLowerCase());
-    })
+      let result = re.test(String(user.email).toLowerCase());
 
-    const passwordVerify = computed(() => {
-      return password.value == password2.value && password.value.length != 0 && password2.value.length != 0;
-    })
+      if (result == false) {
+        return toast.error('Email ikke korrekt!')
+      }
+
+      return true
+    }
+
+    const passwordVerify = () => {
+      if (user.password != user.password2 && user.password.length != 0 && user.password2.length != 0) {
+        return toast.error('Kodeord matcher ikke!')
+      }
+      return true
+    }
 
     const checkALl = computed(() => {
-      return username.value.length != 0 && email.value.length != 0 && firstname.value.length != 0 && lastname.value.length != 0 && passwordVerify.value == true && validateEmail.value == true && date.value != 0;
+      return user.username.length != 0 && user.email.length != 0 && user.firstname.length != 0 && user.lastname.length != 0 && passwordVerify() == true && validateEmail() == true && user.date != 0;
     })
 
     function onSubmit(e){
-      console.log(date.value)
-      console.log(e.target.username.value)
+      var form = e.target;
+      axios.post('http://localhost:3000/users', {
+        firstname: form.firstname.value,
+        lastname: form.lastname.value,
+        birthday: dayjs(form.birthday.value).toDate(),
+        username: form.username.value,
+        email: form.email.value,
+        password: form.password.value
+      }).then((response) => {
+        if (response.data.status === "OK"){
+          toast.success('Registeret!')
+          router.push("login")
+        }else{
+          toast.error('Bruger eksistere allerede!')
+        }
+        
+      }).catch(error => {
+        console.log(error)
+      })
     }
 
-    return { password, password2, email, validateEmail, passwordVerify, onSubmit, username, firstname, lastname, date, checkALl }
+    return {
+      user, validateEmail, passwordVerify,
+      onSubmit, checkALl
+    }
   }
 }
 </script>

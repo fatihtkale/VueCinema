@@ -1,15 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var { User } = require('../models')
 
 router.get('/', async function(req, res, next) {
-    let NewUser = await User.create({
-        username: "req",
-        password: "asdd",
-        email: "req",
-        shopname: "shopname"
-    })
-    res.send(NewUser)
+    res.render('Welcome to the coolest tec api')
 });
 
 module.exports = router;

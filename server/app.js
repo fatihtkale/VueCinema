@@ -10,7 +10,7 @@ const authjwt = require('./auth')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var registerRouter = require('./routes/register');
+var loginRouter = require('./routes/login');
 
 var app = express();
 
@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', [authjwt.verifyToken], usersRouter);
-app.use('/register', registerRouter);
+app.use('/users', /*[authjwt.verifyToken],*/ usersRouter);
+app.use('/login', /*[authjwt.verifyToken],*/ loginRouter);
 
 module.exports = app;
