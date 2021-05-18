@@ -1,11 +1,11 @@
 <template>
-  <form class="form" method="post">
+  <form class="form" v-on:submit.prevent="onSubmit">
     <div class="login-body">
       <div class="login-icon">TC</div>
       <p class="text">Brugernavn</p>
-      <input class="input-field" type="text">
+      <input class="input-field" name="username" type="text">
       <p class="text">Adgangskode</p>
-      <input class="input-field" type="password">
+      <input class="input-field" name="password" type="password">
       <button class="button" type="submit">Login</button>
       <div class="login-footer">
         <router-link to="/register">Ny Bruger?</router-link>
@@ -16,8 +16,40 @@
 </template>
 
 <script>
-export default {
+import bcrypt from 'bcryptjs';
+import axios from 'axios';
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+import { useToast } from "vue-toastification";
 
+export default {
+  setup(){
+    const router = useRouter()
+    const toast = useToast();
+    var state = useStore();
+
+    function onSubmit(e){
+      var form = e.target;
+      axios.post("http://localhost:3000/login", {
+        username: form.username.value,
+        password: bcrypt.hashSync(form.password.value, 8),
+      }).then(response => {
+        if (response.data.status == "OK") {
+          state.commit("UPDATE_JWT", response.data.token);
+          state.commit("UPDATE_LOGGED_IN", true);
+          console.log(response);
+          toast.success("Logged in!")
+          router.push("/")
+        }else{
+          toast.error("User not found!")
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+
+    return { onSubmit }
+  }
 }
 </script>
 

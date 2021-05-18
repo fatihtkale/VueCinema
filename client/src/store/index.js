@@ -1,8 +1,9 @@
 import { createStore } from 'vuex'
+import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   state: {
-    loggedIn: Boolean
+    loggedIn: false
   },
   mutations: {
     UPDATE_JWT (state, payload) {
@@ -12,12 +13,16 @@ export default createStore({
       state.loggedIn = payload;
     }
   },
+  getters:{
+    loggedIn (state){
+      return state.loggedIn;
+    }
+  },
   actions: {
     userLogout({ commit }){
       commit('UPDATE_JWT', "")
       commit('UPDATE_LOGGED_IN', false)
     }
   },
-  modules: {
-  }
+  plugins: [createPersistedState()]
 })

@@ -55,15 +55,15 @@ export default {
       let result = re.test(String(user.email).toLowerCase());
 
       if (result == false) {
-        return toast.error('Email ikke korrekt!')
+        return toast.error('Email is invalid!')
       }
 
       return true
     }
 
     const passwordVerify = () => {
-      if (user.password != user.password2 && user.password.length != 0 && user.password2.length != 0) {
-        return toast.error('Kodeord matcher ikke!')
+      if (user.password != user.password2) {
+        return toast.error('Password dont match!')
       }
       return true
     }
@@ -83,10 +83,10 @@ export default {
         password: form.password.value
       }).then((response) => {
         if (response.data.status === "OK"){
-          toast.success('Registeret!')
+          toast.success('Registered!')
           router.push("login")
         }else{
-          toast.error(response.data.status)
+          toast.error("User already exsist!")
         }
         
       }).catch(error => {
