@@ -3,15 +3,17 @@ var router = express.Router();
 var { Userlogin } = require('../models')
 const jwt = require('jsonwebtoken');
 const config = require('../config')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 router.post('/', async function(req, res, next) {
+
     await Userlogin.findOne({ where: { username: req.body.username } })
     .then(function (users) {
         if (!users) {
             return res.send({ status: 'Incorrect username.' });
         }
-        if (!users.password === bcrypt.hashSync(req.body.password, 8)) {
+
+        if (bcrypt.compareSync(req.body.password, users.password) == false) {
             return res.send({ status: 'Incorrect password.' });
         }
 

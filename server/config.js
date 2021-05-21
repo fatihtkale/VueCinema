@@ -1,3 +1,4 @@
 module.exports = {
-    'secret': 'brianbiggay'
+    'secret': 'brianbiggay',
+    'hash': "briangay"
 };

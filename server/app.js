@@ -11,6 +11,7 @@ const authjwt = require('./auth')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
+var jwtValidateRouter = require('./routes/jwtValidate');
 
 var app = express();
 
@@ -24,5 +25,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', /*[authjwt.verifyToken],*/ usersRouter);
 app.use('/login', /*[authjwt.verifyToken],*/ loginRouter);
+app.use('/validatetoken', /*[authjwt.verifyToken],*/ jwtValidateRouter);
 
 module.exports = app;

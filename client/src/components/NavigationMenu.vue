@@ -2,23 +2,23 @@
     <div class="quick-nav">
     <h1 style="color: #43a062;">TC</h1>
     <ul>
-      <li>
+      <li class="nav-link">
         <router-link to="#">Film</router-link>
       </li>
-      <li>
+      <li class="nav-link">
         <router-link to="#">Om os</router-link>
       </li>
-      <li v-if="isLoggedIn">
+      <li class="nav-link" v-if="isLoggedIn">
         <div @click="dropDown()" class="button">{{user.users.username}}</div>
       </li>
-      <li v-else>
+      <li class="nav-link" v-else>
         <router-link class="button" to="/login">Login</router-link>
       </li>
     </ul>
-	<div v-show="dropdown" class="dropdown">
+	<div v-if="isLoggedIn" v-show="dropdown" class="dropdown">
 		<ul>
-			<li @click="logout()">
-				Logout
+			<li v-if="user.users.admin">
+				<router-link class="admin-button" to="/admin">Admin</router-link>
 			</li>
 			<li @click="logout()">
 				Logout
@@ -64,7 +64,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.admin-button{
+	display: block;
+	color:white; 
+	text-decoration:none
+}
 @media only screen and (max-width : 425px){
 
 }
@@ -99,10 +104,10 @@ export default {
   list-style-type: none;
   float: right;
 }
-.quick-nav li{
+.quick-nav .nav-link{
   display: inline-block;
 }
-.quick-nav li a{
+.quick-nav .nav-link a{
   color: white;
   text-decoration: none;
   line-height: 78px;
@@ -114,7 +119,7 @@ export default {
   transition: background-color 0.3s;
   user-select: none;
 }
-.quick-nav li a:hover{
+.quick-nav .nav-link a:hover{
 	background-color:#171717;
 }
 .quick-nav li div{

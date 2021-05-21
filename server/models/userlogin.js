@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: true,
           name: 'userid'
         }
-    })
+      })
     }
   };
   Userlogin.init({
@@ -25,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    admin: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
     }
   }, {
     sequelize,

@@ -22,10 +22,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        admin: {
-            type: DataTypes.BOOLEAN,
-            allowNull: true
-        },
         birthday:{
             type: DataTypes.DATEONLY,
             allowNull: false

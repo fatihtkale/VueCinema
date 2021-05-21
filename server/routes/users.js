@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const dayjs = require('dayjs') 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const { Op } = require("sequelize");
 
@@ -9,7 +9,8 @@ var { User, Userlogin } = require('../models')
 
 // Create User
 router.post('/', async function(req, res, next) {
-
+    var salt = bcrypt.genSaltSync(10);
+    
     await Userlogin.findOne({ where: { [Op.or]:[ {username: req.body.username}, {email: req.body.email} ]} })
     .then(async function (users) {
         if (users) {
@@ -23,7 +24,8 @@ router.post('/', async function(req, res, next) {
         await Userlogin.create({
             username: req.body.username,
             email: req.body.email,
-            password: bcrypt.hashSync(req.body.password, 8)
+            password: bcrypt.hashSync(req.body.password, salt),
+            admin: false
         })
         return res.status(200).send({ status:'OK' });
     })

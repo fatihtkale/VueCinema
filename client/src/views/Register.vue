@@ -4,16 +4,16 @@
       <div class="login-icon">Tec & Chill</div>
 
       <input v-model="user.username" placeholder="Brugernavn" name="username" class="input-field" type="text">
-      
+
       <input @blur="validateEmail" v-model="user.email" placeholder="Email" name="email" class="input-field" type="text">
-      
+
       <input v-model="user.firstname" placeholder="Navn" name="firstname" class="input-field" type="text">
-      
+
       <input v-model="user.lastname" placeholder="Efternavn" name="lastname" class="input-field" type="text">
 
-      <input @blur="passwordVerify" v-model="user.password" placeholder="Kodeord" name="password" class="input-field" type="password">
+      <input v-model="user.password" placeholder="Kodeord" name="password" class="input-field" type="password">
 
-      <input @blur="passwordVerify" v-model="user.password2" placeholder="indtast kodeord igen" class="input-field" type="password">
+      <input @focus="passwordVerify" v-model="user.password2" placeholder="indtast kodeord igen" class="input-field" type="password">
 
       <p style="margin-left: 10px;">Fødselsdag<input v-model="user.date" name="birthday" style="margin: 0; display:flex; margin-top: 10px;" class="input-field" type="date"></p>
 
@@ -62,8 +62,8 @@ export default {
     }
 
     const passwordVerify = () => {
-      if (user.password != user.password2) {
-        return toast.error('Password dont match!')
+      if (user.password != user.password2 && user.password2.length >= 0 && user.password.length >= 0) {
+        return false
       }
       return true
     }
@@ -88,7 +88,6 @@ export default {
         }else{
           toast.error("User already exsist!")
         }
-        
       }).catch(error => {
         console.log(error)
       })

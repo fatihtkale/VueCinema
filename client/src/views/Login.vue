@@ -27,12 +27,13 @@ export default {
     const router = useRouter()
     const toast = useToast();
     var state = useStore();
+    //var salt = bcrypt.genSaltSync(10);
 
     function onSubmit(e){
       var form = e.target;
       axios.post("http://localhost:3000/login", {
         username: form.username.value,
-        password: bcrypt.hashSync(form.password.value, 8),
+        password: form.password.value,
       }).then(response => {
         if (response.data.status == "OK") {
           state.commit("UPDATE_JWT", response.data.token);
@@ -40,8 +41,8 @@ export default {
           console.log(response);
           toast.success("Logged in!")
           router.push("/")
-        }else{
-          toast.error("User not found!")
+        }else {
+          toast.error(response.data.status)
         }
       }).catch(error => {
         console.log(error)
