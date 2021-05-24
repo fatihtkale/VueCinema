@@ -24,23 +24,59 @@
                 </label>
             </div>
         </div>
-        {{selectedWindow}}
+
+        <div class="admin-wrapper">
+            <div v-if="selectedWindow.length != 0" class="admin-panel">
+                <Bruger v-if="selectedWindow === 'bruger'"/>
+                <Film v-if="selectedWindow === 'film'"/>
+                <Theater v-if="selectedWindow === 'theater'"/>
+                <Halls v-if="selectedWindow === 'halls'"/>
+                <Seats v-if="selectedWindow === 'seat'"/>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import { ref } from 'vue'
+/* Admin panel views */
+import Bruger from "../components/admin/Brugere"
+import Film from "../components/admin/Film"
+import Theater from "../components/admin/Theater"
+import Halls from "../components/admin/Halls"
+import Seats from "../components/admin/Seats"
 export default {
     name: "Admin",
     setup(){
         var selectedWindow = ref("");
 
         return { selectedWindow }
+    },
+    components: {
+        Bruger,
+        Film,
+        Theater,
+        Halls,
+        Seats
     }
 }
 </script>
 
 <style scoped>
+.admin-wrapper{
+    display: flex;
+    justify-content: center;
+}
+.admin-panel{
+    position: relative;
+    width: 80%;
+    margin-top: 50px;
+    -webkit-box-shadow: 0px 5px 20px 6px rgba(0,0,0,0.5); 
+    box-shadow: 0px 5px 20px 6px rgba(0,0,0,0.5);
+    background-color: #202020;
+    border: 1px solid #303030;
+    border-radius: 4px;
+}
 .admin{
     width: 100%;
 }
@@ -50,6 +86,8 @@ export default {
     margin-top: 40px;
 }
 .button-group {
+    -webkit-box-shadow: 0px 5px 20px 6px rgba(0,0,0,0.5); 
+    box-shadow: 0px 5px 20px 6px rgba(0,0,0,0.5);
     background-color: #202020;
     border: 1px solid #303030;
     border-radius: 8px;

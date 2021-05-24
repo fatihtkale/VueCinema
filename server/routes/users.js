@@ -7,8 +7,29 @@ const { Op } = require("sequelize");
 
 var { User, Userlogin } = require('../models')
 
+router.get('/', async (req, res, next) => {
+    await Userlogin.findAll()
+    .then(async function (users) {
+        if (users) {
+            return res.send({ status: "OK", user: users });
+        }else{
+            return res.send({ status: "ERROR" })
+        }
+    })
+})
+
+router.get('/:username', async (req, res, next) => {
+    await Userlogin.findOne({ where: { username: req.params.username } })
+    .then(async function (users) {
+        if (users) {
+            return res.send({ status: "OK", user: users });
+        }
+        return res.status(200).send({ status:'OK' });
+    })
+})
+
 // Create User
-router.post('/', async function(req, res, next) {
+router.post('/', async (req, res, next) => {
     var salt = bcrypt.genSaltSync(10);
     
     await Userlogin.findOne({ where: { [Op.or]:[ {username: req.body.username}, {email: req.body.email} ]} })

@@ -15,7 +15,7 @@ export default {
   setup(){
     let router = useRouter();
     var vuex = useStore();
-    let loggedIn = computed(() => vuex.getters.loggedIn)
+    let loggedIn = computed(() => vuex.state.loggedIn)
 
     const tokenCheck = () => {
       axios.post("http://localhost:3000/validatetoken", {
@@ -28,7 +28,6 @@ export default {
     }
 
     watch(router.currentRoute, (newPath, OldPath) => {
-      console.log(newPath, OldPath)
       tokenCheck()
     })
 

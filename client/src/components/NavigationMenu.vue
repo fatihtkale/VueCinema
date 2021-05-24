@@ -30,7 +30,7 @@
 
 <script>
 import jwt_decode from 'jwt-decode';
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useStore } from 'vuex'
 
 export default {
@@ -40,9 +40,9 @@ export default {
 	},
 	setup(){
 		var state = useStore();
-		let token = ref(localStorage.getItem('token'))
-		let decoded = {};
+		let decoded = ref({});
 		let dropdown = ref(false);
+		let token = computed(() => state.state.token);
 
 		function dropDown() {
 			dropdown.value = !dropdown.value;
@@ -53,11 +53,19 @@ export default {
 			dropDown()
 		}
 
-		if (token.value.length <= 0) {
-			decoded = {};
+		if (state.state.token <= 0) {
+			decoded.value = {};
 		}else{
-			decoded = jwt_decode(token.value)
+			decoded.value = jwt_decode(state.state.token)
 		}
+
+		watch(token, (newPath, OldPath) => {
+			if (state.state.token <= 0) {
+				decoded.value = {};
+			}else{
+				decoded.value = jwt_decode(state.state.token)
+			}
+		})
 
 		return { user: decoded, dropDown, dropdown, logout }
 	}

@@ -3,11 +3,12 @@ import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   state: {
-    loggedIn: false
+    loggedIn: false,
+    token: ""
   },
   mutations: {
     UPDATE_JWT (state, payload) {
-      localStorage.setItem('token', payload);
+      state.token = payload;
     },
     UPDATE_LOGGED_IN (state, payload) {
       state.loggedIn = payload;
