@@ -52,6 +52,7 @@
                 <input type="text" id="brugernavn" name="brugernavn">
                 <button type="submit">Submit</button>
             </form>
+            
             <form v-if="false" class="opretform" v-on:submit.prevent="OpretBruger">
                 <label for="brugernavn">Brugernavn:</label>
                 <input type="text" id="brugernavn" name="brugernavn">
@@ -86,7 +87,7 @@ import axios from 'axios'
 export default {
     setup(){
         const toast = useToast();
-        
+
         let selectedwindows = reactive({
             opret: false,
             rediger: false,
