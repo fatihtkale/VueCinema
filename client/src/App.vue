@@ -19,7 +19,7 @@ export default {
 
     const tokenCheck = () => {
       axios.post("http://localhost:3000/validatetoken", {
-        token: localStorage.getItem("token")
+        token: vuex.state.token
       }).then((resp) => {
         if (resp.data.status != "OK") {
           vuex.dispatch("userLogout");

@@ -53,17 +53,17 @@ export default {
 			dropDown()
 		}
 
-		if (state.state.token <= 0) {
+		if (token.value.length <= 0) {
 			decoded.value = {};
 		}else{
-			decoded.value = jwt_decode(state.state.token)
+			decoded.value = jwt_decode(token.value)
 		}
 
 		watch(token, (newPath, OldPath) => {
-			if (state.state.token <= 0) {
+			if (token.value.length <= 0) {
 				decoded.value = {};
 			}else{
-				decoded.value = jwt_decode(state.state.token)
+				decoded.value = jwt_decode(token.value)
 			}
 		})
 

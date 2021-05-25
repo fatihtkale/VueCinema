@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import bcrypt from 'bcryptjs';
 import axios from 'axios';
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
@@ -27,7 +26,6 @@ export default {
     const router = useRouter()
     const toast = useToast();
     var state = useStore();
-    //var salt = bcrypt.genSaltSync(10);
 
     function onSubmit(e){
       var form = e.target;

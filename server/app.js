@@ -6,7 +6,6 @@ var cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
-const authjwt = require('./auth')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -23,8 +22,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', /*[authjwt.verifyToken],*/ usersRouter);
-app.use('/login', /*[authjwt.verifyToken],*/ loginRouter);
+app.use('/users', usersRouter);
+app.use('/login', loginRouter);
 app.use('/validatetoken', /*[authjwt.verifyToken],*/ jwtValidateRouter);
 
 module.exports = app;

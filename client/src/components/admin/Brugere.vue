@@ -47,27 +47,27 @@
             </form>
         </div>
         <div v-if="selectedwindows.rediger == true">
-            <form class="opretform" v-on:submit.prevent="OpretBruger">
+            <form v-if="userFound == false" class="opretform" v-on:submit.prevent="checkUser">
                 <label for="brugernavn">Bruger navn:</label>
-                <input type="text" id="brugernavn" name="brugernavn">
+                <input type="text" id="brugernavnCheck" name="brugernavnCheck">
                 <button type="submit">Submit</button>
             </form>
-            
-            <form v-if="false" class="opretform" v-on:submit.prevent="OpretBruger">
+
+            <form v-if="userFound" class="opretform" v-on:submit.prevent="editUsers">
                 <label for="brugernavn">Brugernavn:</label>
-                <input type="text" id="brugernavn" name="brugernavn">
+                <input v-model="editUser.username" type="text" id="brugernavn" name="brugernavn">
 
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email">
+                <input v-model="editUser.email" type="email" id="email" name="email">
 
                 <label for="navn">Navn:</label>
-                <input type="text" id="navn" name="navn">
+                <input v-model="editUser.name" type="text" id="navn" name="navn">
 
                 <label for="efternavn">Efternavn:</label>
-                <input type="text" id="efternavn" name="efternavn">
+                <input v-model="editUser.lastname" type="text" id="efternavn" name="efternavn">
 
                 <label for="kodeord">Kodeord:</label>
-                <input type="password" id="kodeord" name="kodeord">
+                <input v-model="editUser.password" type="password" id="kodeord" name="kodeord">
 
                 <button type="submit">Submit</button>
             </form>
@@ -79,14 +79,25 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
 import dayjs from 'dayjs'
-import { useToast } from "vue-toastification";
 import axios from 'axios'
+import { useToast } from "vue-toastification";
+import { useStore } from 'vuex'
+import { reactive, ref } from 'vue'
 
 export default {
     setup(){
         const toast = useToast();
+        const state = useStore();
+        let userFound = ref(false)
+
+        let editUser = reactive({ 
+            username: '',
+            email: '',
+            name: '',
+            lastname: '',
+            password: ''
+        })
 
         let selectedwindows = reactive({
             opret: false,
@@ -119,8 +130,48 @@ export default {
             
         }
 
-        function redigerBruger(e) {
-            
+        function checkUser(e) {
+            var form = e.target;
+            const options = {
+                headers: {'x-access-token': state.state.token}
+            };
+
+            axios.get('http://localhost:3000/users/' + form.brugernavnCheck.value, options)
+            .then(response => {
+                if (response.data.status === "OK") {
+                    toast.success("Bruger fundet!");
+                    editUser.username = response.data.user.users.username;
+                    editUser.email = response.data.user.users.email;
+                    editUser.lastname = response.data.user.user.lastname;
+                    editUser.name = response.data.user.user.firstname;
+                    userFound.value = true
+                    return true
+                }else{
+                    toast.error("Bruger findes ikke!");
+                    userFound.value = false
+                    return false
+                }
+            })
+        }
+
+        function editUsers(e) {
+            var form = e.target;
+            const options = {
+                headers: {'x-access-token': state.state.token}
+            };
+
+            axios.put('http://localhost:3000/users/' + editUser.username, options)
+            .then(response => {
+                console.log(response)
+                if (response.data.status === "OK") {
+                    toast.success("Opdateret fundet!");
+                    return true
+                }else{
+                    toast.error("Noget gik galt!");
+                    userFound.value = false
+                    return false
+                }
+            })
         }
 
         function windowToggler(window) {
@@ -150,7 +201,7 @@ export default {
             }
         }
 
-        return { selectedwindows, windowToggler, redigerBruger, opretBruger }
+        return { selectedwindows, windowToggler, checkUser, opretBruger, userFound, editUser, editUsers }
     }
 }
 </script>

@@ -5,12 +5,6 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Userlogin extends Model {
     static associate(models) {
-      Userlogin.belongsTo(models.User, {
-        foreignKey: {
-          allowNull: true,
-          name: 'userid'
-        }
-      })
     }
   };
   Userlogin.init({
