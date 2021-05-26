@@ -12,13 +12,18 @@ router.get('/', [authjwt.verifyToken], async (req, res, next) => {
     await Userlogin.findAll()
     .then(async function (users) {
         if (users) {
-            return res.send({ status: "OK", user: users });
+            await User.findAll().then(async function(user){
+            if (user) {
+                return res.send({ status: "OK", user: {user, users} });
+            }
+        })
         }else{
             return res.send({ status: "ERROR" })
         }
     })
 })
 
+// Get sepcific user
 router.get('/:username', [authjwt.verifyToken], async (req, res, next) => {
     await Userlogin.findOne({ where: { username: req.params.username } })
     .then(async function (users) {
@@ -27,20 +32,51 @@ router.get('/:username', [authjwt.verifyToken], async (req, res, next) => {
                 if (user) {
                     return res.send({ status: "OK", user: {user, users} });
                 }
-                return res.send({ status: "ERROR" });
             })
+        }else{
+            return res.send({ status: "ERROR" });
         }
-        return res.send({ status: "ERROR" });
     })
 })
 
 // Update user
-router.put('/:username', [authjwt.verifyToken], async (req, res, next) => {
-    // todo
+router.put('/:id', [authjwt.verifyToken], async (req, res, next) => {
+    var salt = bcrypt.genSaltSync(10);
+    if (req.body.password.length == 0) {
+        await Userlogin.update({
+            username: req.body.username,
+            email: req.body.email
+        }, {
+            where:{ 
+                id: req.params.id
+            }
+        })
+    }else{
+        await Userlogin.update({
+            username: req.body.username,
+            password: bcrypt.hashSync(req.body.password, salt),
+            email: req.body.email
+        }, {
+            where:{ 
+                id: req.params.id
+            }
+        })
+    }
+    await User.update({
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+    },{
+        where:{
+            userId: req.params.id
+        }
+    })
+
+    return res.send({status: "OK"});
 })
 
 // Create User
 router.post('/', async (req, res, next) => {
+
     var salt = bcrypt.genSaltSync(10);
     
     await Userlogin.findOne({ where: { [Op.or]:[ {username: req.body.username}, {email: req.body.email} ]} })
@@ -64,5 +100,18 @@ router.post('/', async (req, res, next) => {
     .catch(err => console.log(err));
 });
 
+router.delete('/:id', [authjwt.verifyToken], async (req, res, next) => {
+    await User.destroy({
+        where: {
+          userId: req.params.id
+        }
+    });
+    await Userlogin.destroy({
+        where: {
+            id: req.params.id
+        }
+    })
+    return res.send({ status: "OK" })
+})
 
 module.exports = router;

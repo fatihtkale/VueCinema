@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         movieAgeLimit: {
             allowNull: false,
-            type: DataTypes.STRING
+            type: DataTypes.INTEGER
         },
         movieNextShow: {
             allowNull: false,

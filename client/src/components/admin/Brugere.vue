@@ -17,7 +17,7 @@
     </div>
     <div class="panel">
         <div v-if="selectedwindows.opret == true">
-            <form class="opretform" v-on:submit.prevent="opretBruger">
+            <form class="opretform" v-on:submit.prevent="createUser">
                 <label for="brugernavn">Brugernavn:</label>
                 <input type="text" id="brugernavn" name="brugernavn">
 
@@ -40,9 +40,9 @@
             </form>
         </div>
         <div v-if="selectedwindows.slet == true">
-            <form class="opretform" v-on:submit.prevent="OpretBruger">
-                <label for="brugernavn">Bruger navn:</label>
-                <input type="text" id="brugernavn" name="brugernavn">
+            <form class="opretform" v-on:submit.prevent="deleteUser">
+                <label for="username">Bruger navn:</label>
+                <input type="text" id="username" name="username">
                 <button type="submit">Submit</button>
             </form>
         </div>
@@ -54,26 +54,34 @@
             </form>
 
             <form v-if="userFound" class="opretform" v-on:submit.prevent="editUsers">
-                <label for="brugernavn">Brugernavn:</label>
-                <input v-model="editUser.username" type="text" id="brugernavn" name="brugernavn">
+                <label for="username">Brugernavn:</label>
+                <input v-model="editUser.username" type="text" id="username" name="username">
 
                 <label for="email">Email:</label>
                 <input v-model="editUser.email" type="email" id="email" name="email">
 
-                <label for="navn">Navn:</label>
-                <input v-model="editUser.name" type="text" id="navn" name="navn">
+                <label for="name">Navn:</label>
+                <input v-model="editUser.name" type="text" id="name" name="name">
 
-                <label for="efternavn">Efternavn:</label>
-                <input v-model="editUser.lastname" type="text" id="efternavn" name="efternavn">
+                <label for="lastname">Efternavn:</label>
+                <input v-model="editUser.lastname" type="text" id="lastname" name="lastname">
 
                 <label for="kodeord">Kodeord:</label>
-                <input v-model="editUser.password" type="password" id="kodeord" name="kodeord">
+                <input v-model="editUser.password" type="password" id="password" name="password">
 
                 <button type="submit">Submit</button>
             </form>
         </div>
-        <div v-if="selectedwindows.seAlle == true">
-            en eller anden funktion
+        <div style="color:white" v-if="selectedwindows.seAlle == true">
+            <div v-for="item in users.users" :key="item.length">
+                {{'Brugernavn: ' + item.username}}<br>
+                {{'Email: ' + item.email}}<br>
+            </div>
+            <div v-for="item in users.user" :key="item.length">
+                {{'Brugernavn: ' + item.firstname}}<br>
+                {{'Email: ' + item.lastname}}<br><br>
+                <hr>
+            </div>
         </div>
     </div>
 </template>
@@ -83,15 +91,17 @@ import dayjs from 'dayjs'
 import axios from 'axios'
 import { useToast } from "vue-toastification";
 import { useStore } from 'vuex'
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 
 export default {
     setup(){
         const toast = useToast();
         const state = useStore();
         let userFound = ref(false)
+        let users = ref({})
 
-        let editUser = reactive({ 
+        let editUser = reactive({
+            id: 0,
             username: '',
             email: '',
             name: '',
@@ -106,7 +116,7 @@ export default {
             seAlle: false
         })
 
-        function opretBruger(e) {
+        function createUser(e) {
             var form = e.target;
             axios.post('http://localhost:3000/users', {
               firstname: form.navn.value,
@@ -126,8 +136,50 @@ export default {
             })
         }
 
-        function sletBruger(e) {
+        function deleteUser(e) {
+            var form = e.target;
+            const options = {
+                headers: {'x-access-token': state.state.token}
+            };
             
+            axios.get('http://localhost:3000/users/' + form.username.value, options)
+            .then(response => {
+                console.log(response.data)
+                if (response.data.status === "OK") {
+                    toast.success("Bruger fundet!");
+
+                    axios.delete('http://localhost:3000/users/' + response.data.user.user.userId, options)
+                    .then(response => {
+                        if (response.data.status === "OK") {
+                            toast.success("Bruger slettet!")
+                        }
+                    })
+
+                    userFound.value = true
+                    return true
+                }else{
+                    toast.error("Bruger findes ikke!");
+                    userFound.value = false
+                    return false
+                }
+            })
+
+        }
+        
+        function getAllUsers() {
+            const options = {
+                headers: {'x-access-token': state.state.token}
+            };
+            axios.get('http://localhost:3000/users', options)
+            .then(response => {
+                if (response.data.status === "OK") {
+                    users.value = response.data.user
+                    console.log(users.value)
+                }else{
+                    toast.error("Bruger findes ikke!");
+                    return false
+                }
+            })
         }
 
         function checkUser(e) {
@@ -138,12 +190,14 @@ export default {
 
             axios.get('http://localhost:3000/users/' + form.brugernavnCheck.value, options)
             .then(response => {
+                console.log(response.data)
                 if (response.data.status === "OK") {
                     toast.success("Bruger fundet!");
                     editUser.username = response.data.user.users.username;
                     editUser.email = response.data.user.users.email;
                     editUser.lastname = response.data.user.user.lastname;
                     editUser.name = response.data.user.user.firstname;
+                    editUser.id = response.data.user.users.id;
                     userFound.value = true
                     return true
                 }else{
@@ -160,11 +214,16 @@ export default {
                 headers: {'x-access-token': state.state.token}
             };
 
-            axios.put('http://localhost:3000/users/' + editUser.username, options)
+            axios.put('http://localhost:3000/users/' + editUser.id, {
+                username: form.username.value,
+                password: form.password.value == "" ? '' : form.password.value,
+                email: form.email.value,
+                firstname: form.name.value,
+                lastname: form.lastname.value,
+            }, options)
             .then(response => {
-                console.log(response)
                 if (response.data.status === "OK") {
-                    toast.success("Opdateret fundet!");
+                    toast.success("Opdateret bruger!");
                     return true
                 }else{
                     toast.error("Noget gik galt!");
@@ -201,7 +260,12 @@ export default {
             }
         }
 
-        return { selectedwindows, windowToggler, checkUser, opretBruger, userFound, editUser, editUsers }
+        onMounted(() => {
+            getAllUsers()
+            console.log(users.value)
+        })
+
+        return { selectedwindows, windowToggler, checkUser, createUser, userFound, editUser, editUsers, users, deleteUser }
     }
 }
 </script>
