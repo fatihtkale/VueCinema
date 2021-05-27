@@ -1,5 +1,5 @@
 <template>
-    <div class="bruger-panel">
+    <div class="panel-wrapper">
         <ul class="quick-list">
             <li @click="windowToggler(0)" class="quick-item">
                 Opret bruger
@@ -278,7 +278,8 @@ export default {
     margin-right: 20px;
     display: flex;
     flex-direction: column;
-    row-gap: 38px;
+    height: 100%;
+    justify-content:space-between
 }
 .quick-item {
     cursor: pointer;
@@ -307,6 +308,11 @@ export default {
     color: white;
     outline: none;
     border-radius: 4px;
+}
+.panel-wrapper{
+    position: relative;
+    height: 100%;
+    float: left;    
 }
 .opretform button{
     padding: 10px;

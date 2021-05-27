@@ -37,6 +37,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             type: DataTypes.INTEGER
         },
+        movieBanner: {
+            allowNull: true,
+            type: DataTypes.STRING
+        },
         movieAgeLimit: {
             allowNull: false,
             type: DataTypes.INTEGER

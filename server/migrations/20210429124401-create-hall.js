@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      TheaterID: {
+      theaterID: {
         type: Sequelize.STRING
       },
       createdAt: {

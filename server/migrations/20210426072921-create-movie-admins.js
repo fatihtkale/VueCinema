@@ -5,9 +5,6 @@ module.exports = {
             movieProfit: {
                 type: Sequelize.STRING
             },
-            lastShow: {
-                type: Sequelize.STRING
-            },
             nextShow: {
                 type: Sequelize.STRING
             },

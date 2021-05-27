@@ -3,13 +3,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const bodyParser = require('body-parser');
+const authjwt = require('./auth')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
+var filmRouter = require('./routes/film');
+var hallsRouter = require('./routes/halls');
 var jwtValidateRouter = require('./routes/jwtValidate');
 
 var app = express();
@@ -24,6 +24,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', loginRouter);
-app.use('/validatetoken', /*[authjwt.verifyToken],*/ jwtValidateRouter);
+app.use('/film', [authjwt.verifyToken], filmRouter);
+app.use('/halls', [authjwt.verifyToken], hallsRouter);
+app.use('/validatetoken', /*[authjwt.verifyToken]*/ jwtValidateRouter);
 
 module.exports = app;
