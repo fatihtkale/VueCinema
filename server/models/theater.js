@@ -10,20 +10,6 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Theater.belongsTo(models.CommonRows, {
-        foreignKey: {
-          name: 'rowId',
-          allowNull: false
-        }
-      })
-      
-      Theater.belongsTo(models.VipRows, {
-        foreignKey: {
-          name: 'vipRowId',
-          allowNull: false
-        }
-      })
-      
       Theater.belongsTo(models.Hall,{
         foreignKey: {
           name: 'hallId',
@@ -37,6 +23,14 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       autoIncrement: true,
       type: DataTypes.INTEGER
+    },
+    rowQty: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    vipRowQty: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     sequelize,

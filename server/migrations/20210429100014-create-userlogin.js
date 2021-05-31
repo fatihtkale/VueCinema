@@ -9,19 +9,19 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       username: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false
       },
       password: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false
       },
       email: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false
       },
       admin: {
-          type: DataTypes.BOOLEAN,
+          type: Sequelize.BOOLEAN,
           allowNull: true
       },
       createdAt: {

@@ -17,37 +17,34 @@
     </div>
     <div class="panel">
         <div v-if="selectedwindows.opret == true">
-            <form class="opretform" v-on:submit.prevent="createHall">
+            <form class="opretform" v-on:submit.prevent="createSeat">
                 
-                <label for="qty">Plads antal:</label>
-                <input type="number" id="qty" name="qty">
+                <label for="rowcommon">Antal række af sæder: (1 række = 8 sæder)</label>
+                <input type="number" id="rowcommon" name="rowcommon">
 
-                <label for="availabel">Ledig:</label>
-                <input type="number" placeholder="1 = ledig | 0 = fuld" id="availabel" name="availabel">
+                <label for="rowvip">Antal række af vip sæder: (1 række = 8 sæder)</label>
+                <input type="number" id="rowvip" name="rowvip">
 
                 <button type="submit">Submit</button>
             </form>
         </div>
         <div v-if="selectedwindows.slet == true">
-            <form class="opretform" v-on:submit.prevent="deleteHall">
-                <label for="id">Hall ID:</label>
+            <form class="opretform" v-on:submit.prevent="deleteSeat">
+                <label for="id">Row ID:</label>
                 <input type="text" id="id" name="id">
                 <button type="submit">Submit</button>
             </form>
         </div>
         <div v-if="selectedwindows.rediger == true">
-            <form v-if="hallFound == false" class="opretform" v-on:submit.prevent="checkHall">
-                <label for="hallCheck">Hall ID:</label>
-                <input type="text" id="hallCheck" name="hallCheck">
+            <form v-if="seatFound == false" class="opretform" v-on:submit.prevent="checkSeat">
+                <label for="seatCheck">Række ID:</label>
+                <input type="text" id="seatCheck" name="seatCheck">
                 <button type="submit">Submit</button>
             </form>
 
-            <form v-if="hallFound" class="opretform" v-on:submit.prevent="editHalls">
-                <label for="qty">Hall plads:</label>
-                <input v-model="editHall.qty" type="text" id="qty" name="qty">
-
-                <label for="availabel">Hall ledig:</label>
-                <input v-model="editHall.availabel" type="text" required id="availabel" name="availabel">
+            <form v-if="seatFound" class="opretform" v-on:submit.prevent="editSeats">
+                <label for="seat">Sæde antal:</label>
+                <input v-model="editHall.seat" type="text" id="seat" name="seat">
 
                 <button type="submit">Submit</button>
             </form>
@@ -90,13 +87,13 @@ export default {
             seAlle: false
         })
 
-        function createHall(e) {
+        function createSeat(e) {
             var form = e.target;
             const options = {
                 headers: {'x-access-token': state.state.token}
             };
 
-            axios.post('http://localhost:3000/halls/', {
+            axios.post('http://localhost:3000/seat/', {
                 qty: form.qty.value,
                 availabel: form.availabel.value
             }, options).then(resp => {
@@ -214,7 +211,7 @@ export default {
             getAllHall()
         })
 
-        return { selectedwindows, windowToggler, checkHall, createHall, hallFound, editHalls, editHall, halls, deleteHall }
+        return { selectedwindows, windowToggler, checkHall, createSeat, hallFound, editHalls, editHall, halls, deleteHall }
     }
 }
 </script>

@@ -70,6 +70,7 @@ router.put('/:id', async function(req, res, next) {
             movieGenre: req.body.genre,
             movieReleaseYear: req.body.release,
             movieAgeLimit: req.body.age,
+            movieBanner: req.body.banner,
             movieNextShow: dayjs(req.body.nextshow).toDate()
         }, { 
             where:{

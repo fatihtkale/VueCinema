@@ -3,41 +3,41 @@ module.exports = {
     up: async(queryInterface, Sequelize) => {
         await queryInterface.createTable('Movies', {
             movieId: {
-                type: DataTypes.INTEGER,
+                type: Sequelize.INTEGER,
                 primaryKey: true,
                 autoIncrement: true
             },
             movieTitle: {
                 allowNull: false,
-                type: DataTypes.STRING
+                type: Sequelize.STRING
             },
             movieDescription: {
                 allowNull: false,
-                type: DataTypes.STRING
+                type: Sequelize.STRING
             },
             movieRating: {
                 allowNull: false,
-                type: DataTypes.INTEGER
+                type: Sequelize.INTEGER
             },
             movieGenre: {
                 allowNull: false,
-                type: DataTypes.STRING
+                type: Sequelize.STRING
             },
             movieReleaseYear: {
                 allowNull: false,
-                type: DataTypes.INTEGER
+                type: Sequelize.INTEGER
             },
             movieBanner: {
                 allowNull: true,
-                type: DataTypes.STRING
+                type: Sequelize.STRING
             },
             movieAgeLimit: {
                 allowNull: false,
-                type: DataTypes.INTEGER
+                type: Sequelize.INTEGER
             },
             movieNextShow: {
                 allowNull: false,
-                type: DataTypes.DATE
+                type: Sequelize.DATE
             },
             createdAt: {
                 allowNull: false,

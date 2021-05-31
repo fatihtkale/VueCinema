@@ -10,6 +10,8 @@ var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var filmRouter = require('./routes/film');
 var hallsRouter = require('./routes/halls');
+var seatsRouter = require('./routes/seats');
+var vipSeatsRouter = require('./routes/vipseats');
 var jwtValidateRouter = require('./routes/jwtValidate');
 
 var app = express();
@@ -26,6 +28,8 @@ app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/film', [authjwt.verifyToken], filmRouter);
 app.use('/halls', [authjwt.verifyToken], hallsRouter);
+app.use('/seats', [authjwt.verifyToken], seatsRouter);
+app.use('/vipseats', [authjwt.verifyToken], vipSeatsRouter);
 app.use('/validatetoken', /*[authjwt.verifyToken]*/ jwtValidateRouter);
 
 module.exports = app;

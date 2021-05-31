@@ -3,10 +3,7 @@
     <h1 style="color: #43a062;">TC</h1>
     <ul>
       <li class="nav-link">
-        <router-link to="#">Film</router-link>
-      </li>
-      <li class="nav-link">
-        <router-link to="#">Om os</router-link>
+        <router-link to="/movies">Film</router-link>
       </li>
       <li class="nav-link" v-if="isLoggedIn">
         <div @click="dropDown()" class="button">{{user.users.username}}</div>

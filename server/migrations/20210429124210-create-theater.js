@@ -2,14 +2,18 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Theaters', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
+      theaterId:{
         primaryKey: true,
+        autoIncrement: true,
         type: Sequelize.INTEGER
       },
-      hallID: {
-        type: Sequelize.STRING
+      rowQty: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      vipRowQty: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

@@ -78,6 +78,9 @@
                 <label for="age">Film aldersgrænse:</label>
                 <input v-model="editFilm.age" type="text" id="age" name="age">
 
+                <label for="age">Film banner:</label>
+                <input v-model="editFilm.banner" type="text" id="banner" name="banner">
+
                 <button type="submit">Submit</button>
             </form>
         </div>
@@ -87,6 +90,7 @@
                 {{'Beskrivelse: ' + item.movieDescription}}<br>
                 {{'Genre: ' + item.movieGenre}}<br>
                 {{'Film rating: ' + item.movieRating}}<br>
+                {{'Film banner: ' + item.movieBanner}}<br>
                 {{'Set: ' + film.detailsResult[index].movieView}}<br>
                 {{'Profit: ' + film.detailsResult[index].movieProfit}}<br>
                 {{'Næste afspilning: ' + film.detailsResult[index].movieNextShow}}<br><br>
@@ -119,6 +123,7 @@ export default {
             genre: '',
             release: '',
             age: '',
+            banner: '',
         })
 
         let selectedwindows = reactive({
@@ -203,6 +208,7 @@ export default {
                     editFilm.release = response.data.result.movieReleaseYear;
                     editFilm.age = response.data.result.movieAgeLimit;
                     editFilm.nextShow = response.data.result.movieNextShow;
+                    editFilm.banner = response.data.result.movieBanner;
                     filmFound.value = true
                     return true
                 }else{
@@ -226,6 +232,7 @@ export default {
                 genre: form.genre.value,
                 release: form.release.value,
                 age: form.age.value,
+                banner: form.banner.value,
             }, options).then(resp => {
                 console.log(resp)
                 if (resp.data.status == "OK") {
