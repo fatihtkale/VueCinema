@@ -17,13 +17,22 @@
     </div>
     <div class="panel">
         <div v-if="selectedwindows.opret == true">
-            <form class="opretform" v-on:submit.prevent="createHall">
-                
-                <label for="qty">Plads antal:</label>
-                <input type="number" id="qty" name="qty">
+            <form class="opretform" v-on:submit.prevent="createTheater">
+                <label for="normalrow">Normal række antal:</label>
+                <input type="number" id="normalrow" name="normalrow">
 
-                <label for="availabel">Ledig:</label>
-                <input type="number" placeholder="1 = ledig | 0 = fuld" id="availabel" name="availabel">
+                <label for="viprow">Vip række antal:</label>
+                <input type="number" id="viprow" name="viprow">
+
+                <label for="selecthall">hallId:</label>
+                <select name="selecthall" id="selecthall">
+                    <option name="selecthall" :value="items.hallId" v-for="items in halls" :key="items.length">{{items.hallId}}</option>
+                </select>
+
+                <label for="selectmovie">MovieId:</label>
+                <select name="selectmovie" id="selectmovie">
+                    <option name="selectmovie" v-for="items in film" :key="items.length" :value="items.movieId">{{items.movieTitle}}</option>
+                </select>
 
                 <button type="submit">Submit</button>
             </form>
@@ -35,7 +44,7 @@
                 <button type="submit">Submit</button>
             </form>
         </div>
-        <div v-if="selectedwindows.rediger == true">
+        <!-- <div v-if="selectedwindows.rediger == true">
             <form v-if="hallFound == false" class="opretform" v-on:submit.prevent="checkHall">
                 <label for="hallCheck">Hall ID:</label>
                 <input type="text" id="hallCheck" name="hallCheck">
@@ -51,7 +60,7 @@
 
                 <button type="submit">Submit</button>
             </form>
-        </div>
+        </div> -->
         <div style="color:white" v-if="selectedwindows.seAlle == true">
             <div v-for="item in halls" :key="item.length">
                 {{'Hall ID: ' + item.hallId}}<br>
@@ -75,7 +84,8 @@ export default {
         const state = useStore();
 
         let hallFound = ref(false);
-        let halls = ref({});
+        let halls = ref([]);
+        let film = ref([])
 
         let editHall = reactive({
             id: 0,
@@ -90,37 +100,20 @@ export default {
             seAlle: false
         })
 
-        function createHall(e) {
+        function createTheater(e) {
             var form = e.target;
             const options = {
                 headers: {'x-access-token': state.state.token}
             };
-
-            axios.post('http://localhost:3000/halls/', {
-                qty: form.qty.value,
-                availabel: form.availabel.value
-            }, options).then(resp => {
-                if (resp.data.status == "OK") {
-                    return toast.success("Hall oprettet!")
-                }
-                toast.error(resp.data.message);
-            }).catch(err => {
-                console.log(err)
-            })
-        }
-
-        function deleteHall(e) {
-            const options = {
-                headers: {'x-access-token': state.state.token}
-            };
-            axios.delete('http://localhost:3000/halls/' + e.target.id.value, options)
-            .then(resp => {
-                if (resp.data.status == "OK") {
-                    return toast.success("hall slettet!")
-                }
-                return toast.error("hall ikke fundet!")
-            }).catch(err => {
-                console.log(err)
+            
+            axios.post('http://localhost:3000/theater',{
+                normalrow: form.normalrow.value,
+                viprow: form.viprow.value,
+                selecthall: form.selecthall.value,
+                selectmovie: form.selectmovie.value
+            }, options).then(response => {
+                console.log(response);
+                editHalls(response)
             })
         }
         
@@ -131,7 +124,8 @@ export default {
             axios.get('http://localhost:3000/halls', options)
             .then(response => {
                 if (response.data.status === "OK") {
-                    halls.value = response.data.content
+                    halls.value = response.data.result
+                    console.log(halls.value)
                 }else{
                     toast.error("Halls findes ikke!");
                     return false
@@ -139,48 +133,79 @@ export default {
             })
         }
 
-        function checkHall(e) {
-            var form = e.target;
+        function getAllMovies() {
             const options = {
                 headers: {'x-access-token': state.state.token}
             };
-
-            axios.get('http://localhost:3000/halls/' + form.hallCheck.value, options)
+            axios.get('http://localhost:3000/film', options)
             .then(response => {
-                console.log(response.data)
                 if (response.data.status === "OK") {
-                    toast.success("Hall fundet!");
-                    editHall.id = response.data.result.hallId;
-                    editHall.qty = response.data.result.qty;
-                    editHall.availabel = response.data.result.availability;
-                    hallFound.value = true
-                    return true
+                    film.value = response.data.result
+                    console.log(response.data)
+                    console.log(film.value)
                 }else{
-                    toast.error("Hall findes ikke!");
-                    hallFound.value = false
+                    toast.error("Film findes ikke!");
                     return false
                 }
             })
         }
 
-        function editHalls(e) {
-            var form = e.target;
+        function createSeat(e) {
             const options = {
                 headers: {'x-access-token': state.state.token}
             };
 
-            axios.put('http://localhost:3000/halls/' + editHall.id, {
-                qty: form.qty.value,
-                availabel: form.availabel.value,
+            console.log(e)
+
+            for (let i = 0; i < e.rowQty; i++) {
+                    axios.post('http://localhost:3000/seats/', {
+                        seat: 10,
+                        availability: 1,
+                        theaterId: e.theaterId
+                }, options).then(resp => {
+                    if (resp.data.status == "OK") {
+                        return toast.success("Hall oprettet!")
+                    }
+                    toast.error(resp.data.message);
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+
+            for (let i = 0; i < e.vipRowQty; i++) {
+                axios.post('http://localhost:3000/vipseats/', {
+                    seat: 10,
+                    availability: 1,
+                    theaterId: e.theaterId
+                }, options).then(resp => {
+                    if (resp.data.status == "OK") {
+                        return toast.success("Hall oprettet!")
+                    }
+                    toast.error(resp.data.message);
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+        }
+
+        function editHalls(e) {
+            const options = {
+                headers: {'x-access-token': state.state.token}
+            };
+
+            axios.put('http://localhost:3000/halls/' + e.data.result.hallId, {
+                theaterId: e.data.result.theaterId,
+                qty: null
             }, options).then(resp => {
-                console.log(resp)
                 if (resp.data.status == "OK") {
-                    return toast.success("Film opdateret!")
+                    createSeat(e.data.result);
+                    return toast.success("Hall opdateret!")
                 }
                 toast.error(resp.data.message);
             }).catch(err => {
                 console.log(err)
             })
+            console.log(e)
         }
 
         function windowToggler(window) {
@@ -212,9 +237,10 @@ export default {
 
         onMounted(() => {
             getAllHall()
+            getAllMovies()
         })
 
-        return { selectedwindows, windowToggler, checkHall, createHall, hallFound, editHalls, editHall, halls, deleteHall }
+        return { selectedwindows, windowToggler, createTheater, hallFound, editHalls, editHall, halls, film }
     }
 }
 </script>
@@ -270,5 +296,13 @@ export default {
     background-color: #171717;
     color: white;
     border-radius: 4px;
+}
+select { 
+    background-color: #171717;
+    padding: 5px;
+    margin-bottom: 8px;
+    color: white;
+    border: 1px solid #303030;
+    outline: none;
 }
 </style>

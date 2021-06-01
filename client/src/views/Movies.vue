@@ -1,15 +1,18 @@
 <template>
 <div>
-	<div v-if="movies.length >= 0">
+	<div v-if="movies.length > 0">
 		<div class="movies">
 			<div class="movie" v-for="items in movies" :key="items.length">
 				<img :src="items.movieBanner" alt="movie">
 				<div class="moviebottom">
 					<p style="margin-top:8px;">{{items.movieTitle}}</p>
-					<p style="margin-top:8px;">{{items.movieReleaseYear}}</p>
+					<p style="margin-top:8px;color:#404040;">{{items.movieReleaseYear}}</p>
 				</div>
 			</div>
 		</div>
+	</div>
+	<div v-else>
+		<h1 style="text-align:center;color:white;margin-top:200px;">Ingen film.</h1>
 	</div>
 </div>
 
@@ -31,15 +34,14 @@ export default {
 			if (state.state.token == "" || state.state.token.length == 0) 
 				router.push("login")
 
-            const options = {
-                headers: {'x-access-token': state.state.token}
-            };
+			const options = {
+				headers: {'x-access-token': state.state.token}
+			};
 
 			axios.get('http://localhost:3000/film', options)
 			.then(response => {
 				movies.value = response.data.result;
-				console.log(response.data)
-				console.log(movies)
+				console.log(movies);
 			})
 		})
 

@@ -16,12 +16,10 @@
         </ul>
     </div>
     <div class="panel">
+        <p style="font-weight: bold; color: #fff; margin-bottom:5px">hall er required til at lave en theater</p>
         <div v-if="selectedwindows.opret == true">
             <form class="opretform" v-on:submit.prevent="createHall">
                 
-                <label for="qty">Plads antal:</label>
-                <input type="number" id="qty" name="qty">
-
                 <label for="availabel">Ledig:</label>
                 <input type="number" placeholder="1 = ledig | 0 = fuld" id="availabel" name="availabel">
 
@@ -79,7 +77,7 @@ export default {
 
         let editHall = reactive({
             id: 0,
-            qty: '',
+            qty: 0,
             availabel: ''
         })
 
@@ -97,13 +95,12 @@ export default {
             };
 
             axios.post('http://localhost:3000/halls/', {
-                qty: form.qty.value,
                 availabel: form.availabel.value
             }, options).then(resp => {
                 if (resp.data.status == "OK") {
                     return toast.success("Hall oprettet!")
                 }
-                toast.error(resp.data.message);
+                console.log(resp.data.message)
             }).catch(err => {
                 console.log(err)
             })
@@ -151,7 +148,6 @@ export default {
                 if (response.data.status === "OK") {
                     toast.success("Hall fundet!");
                     editHall.id = response.data.result.hallId;
-                    editHall.qty = response.data.result.qty;
                     editHall.availabel = response.data.result.availability;
                     hallFound.value = true
                     return true
@@ -170,7 +166,6 @@ export default {
             };
 
             axios.put('http://localhost:3000/halls/' + editHall.id, {
-                qty: form.qty.value,
                 availabel: form.availabel.value,
             }, options).then(resp => {
                 console.log(resp)

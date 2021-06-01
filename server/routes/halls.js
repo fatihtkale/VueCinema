@@ -26,7 +26,6 @@ router.get('/:id', async function(req, res, next) {
 
 router.post('/', async function(req, res, next) {
     await Hall.create({
-        qty: req.body.qty,
         availability: req.body.availabel,
     }).then(resp => {
         return res.send({ status: "OK" })
@@ -43,7 +42,8 @@ router.put('/:id', async function(req, res, next) {
         }
         await Hall.update({
             qty: req.body.qty,
-            availability: req.body.availabel
+            availability: req.body.availabel,
+            theaterId: req.body.theaterId
         }, { 
             where:{
                 hallId: req.params.id
