@@ -2,7 +2,7 @@
 Cinema application for school
 
 også installer XAMPP som sql server
-[https://www.apachefriends.org/index.html](xampp)
+[linket til xampp](https://www.apachefriends.org/index.html)
 
 gå ind i client folder og kør `npm install`
 derefter
