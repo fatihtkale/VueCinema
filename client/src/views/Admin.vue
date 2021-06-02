@@ -18,10 +18,6 @@
                     <input v-model="selectedWindow" type="radio" name="options" id="option3" value="theater"> 
                     <span>Theaters</span>
                 </label>
-                <label class="button">
-                    <input v-model="selectedWindow" type="radio" name="options" id="option3" value="seat"> 
-                    <span>Seats</span>
-                </label>
             </div>
         </div>
 
@@ -44,7 +40,6 @@ import Bruger from "../components/admin/Brugere"
 import Film from "../components/admin/Film"
 import Theater from "../components/admin/Theater"
 import Halls from "../components/admin/Halls"
-import Seats from "../components/admin/Seats"
 export default {
     name: "Admin",
     setup(){
@@ -56,8 +51,7 @@ export default {
         Bruger,
         Film,
         Theater,
-        Halls,
-        Seats
+        Halls
     }
 }
 </script>

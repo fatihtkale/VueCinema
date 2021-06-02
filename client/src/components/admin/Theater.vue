@@ -125,9 +125,7 @@ export default {
             .then(response => {
                 if (response.data.status === "OK") {
                     halls.value = response.data.result
-                    console.log(halls.value)
                 }else{
-                    toast.error("Halls findes ikke!");
                     return false
                 }
             })

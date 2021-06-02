@@ -90,12 +90,15 @@ router.delete('/:title', async (req, res, next) => {
         if (!movie) {
             return res.send({ message:"Film findex ikke!", status: "ERROR" })
         }
-        await Movies.destroy({
-            where:{ movieId: movie.movieId }
-        }).then(resp => {
-            res.send({ status: "OK" })
-        }).catch(error => {
-            res.send({ status: "error", message: error })
+        await MovieAdmins.destroy({where:{ movieId: movie.movieId}})
+        .then(async response => {
+            await Movies.destroy({
+                where:{ movieId: movie.movieId }
+            }).then(resp => {
+                res.send({ status: "OK" })
+            }).catch(error => {
+                res.send({ status: "error", message: error })
+            })
         })
     })
 })

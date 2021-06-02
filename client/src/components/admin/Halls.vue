@@ -130,7 +130,6 @@ export default {
                 if (response.data.status === "OK") {
                     halls.value = response.data.result
                 }else{
-                    toast.error("Halls findes ikke!");
                     return false
                 }
             })
