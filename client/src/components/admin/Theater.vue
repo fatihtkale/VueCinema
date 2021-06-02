@@ -113,7 +113,7 @@ export default {
                 selectmovie: form.selectmovie.value
             }, options).then(response => {
                 console.log(response);
-                editHalls(response)
+                editHalls(response.data.result)
             })
         }
         
@@ -141,8 +141,6 @@ export default {
             .then(response => {
                 if (response.data.status === "OK") {
                     film.value = response.data.result
-                    console.log(response.data)
-                    console.log(film.value)
                 }else{
                     toast.error("Film findes ikke!");
                     return false
@@ -155,18 +153,13 @@ export default {
                 headers: {'x-access-token': state.state.token}
             };
 
-            console.log(e)
-
             for (let i = 0; i < e.rowQty; i++) {
                     axios.post('http://localhost:3000/seats/', {
                         seat: 10,
                         availability: 1,
                         theaterId: e.theaterId
                 }, options).then(resp => {
-                    if (resp.data.status == "OK") {
-                        return toast.success("Hall oprettet!")
-                    }
-                    toast.error(resp.data.message);
+                    console.log(resp)
                 }).catch(err => {
                     console.log(err)
                 })
@@ -178,14 +171,62 @@ export default {
                     availability: 1,
                     theaterId: e.theaterId
                 }, options).then(resp => {
-                    if (resp.data.status == "OK") {
-                        return toast.success("Hall oprettet!")
-                    }
-                    toast.error(resp.data.message);
+                    console.log(resp)
                 }).catch(err => {
                     console.log(err)
                 })
             }
+            editHallsQty(e)
+            toast.success("Created seats");
+        }
+
+        async function getAmountOfVipSeats(e) {
+            const options = {
+                headers: {'x-access-token': state.state.token}
+            };
+            return await axios.get('http://localhost:3000/vipseats/' + e.theaterId, options)
+            .then(response => {
+                var result = 0;
+                for (let i = 0; i < response.data.result.length; i++) {
+                    const element = response.data.result[i];
+                    result += element.seat;
+                }
+                console.log(result)
+                return result;
+            })
+        }
+
+        async function getAmountOfSeats(e) {
+            const options = {
+                headers: {'x-access-token': state.state.token}
+            };
+            return await axios.get('http://localhost:3000/seats/' + e.theaterId, options)
+            .then(response => {
+                var result = 0;
+                for (let i = 0; i < response.data.result.length; i++) {
+                    const element = response.data.result[i];
+                    result += element.seat;
+                }
+                console.log(result)
+                return result;
+            })
+        }
+
+        async function editHallsQty(e) {
+            const options = {
+                headers: {'x-access-token': state.state.token}
+            };
+
+            axios.put('http://localhost:3000/halls/' + e.hallId, {
+                qty: await getAmountOfSeats(e) + await getAmountOfVipSeats(e),
+            }, options).then(resp => {
+                if (resp.data.status == "OK") {
+                    return toast.success("Hall opdateret!")
+                }
+                toast.error(resp.data.message);
+            }).catch(err => {
+                console.log(err)
+            })
         }
 
         function editHalls(e) {
@@ -193,19 +234,18 @@ export default {
                 headers: {'x-access-token': state.state.token}
             };
 
-            axios.put('http://localhost:3000/halls/' + e.data.result.hallId, {
-                theaterId: e.data.result.theaterId,
+            axios.put('http://localhost:3000/halls/' + e.hallId, {
+                theaterId: e.theaterId,
                 qty: null
             }, options).then(resp => {
                 if (resp.data.status == "OK") {
-                    createSeat(e.data.result);
+                    createSeat(e);
                     return toast.success("Hall opdateret!")
                 }
                 toast.error(resp.data.message);
             }).catch(err => {
                 console.log(err)
             })
-            console.log(e)
         }
 
         function windowToggler(window) {

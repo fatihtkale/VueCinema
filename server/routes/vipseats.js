@@ -7,6 +7,13 @@ router.get('/', async function(req, res, next) {
 });
 
 router.get('/:id', async function(req, res, next) {
+    await VipRows.findAll({ where: { theaterId: req.params.id}})
+    .then(result => {
+        if (result) {
+            return res.send({status: "OK", result})
+        }
+        return res.send({status: "ERROR"})
+    })
 });
 
 router.post('/', async function(req, res, next) {

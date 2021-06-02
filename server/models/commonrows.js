@@ -23,14 +23,8 @@ module.exports = (sequelize, DataTypes) => {
       autoIncrement: true,
       type: DataTypes.INTEGER
     },
-    seat: {
-      allowNull: false,
-      type: DataTypes.STRING
-    },
-    availability: {
-      allowNull: false,
-      type: DataTypes.BOOLEAN
-    }
+    seat: DataTypes.INTEGER,
+    availability: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'CommonRows',
