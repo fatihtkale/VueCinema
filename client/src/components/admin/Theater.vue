@@ -29,7 +29,7 @@
                     <option name="selecthall" :value="items.hallId" v-for="items in halls" :key="items.length">{{items.hallId}}</option>
                 </select>
 
-                <label for="selectmovie">MovieId:</label>
+                <label for="selectmovie">Movie Title:</label>
                 <select name="selectmovie" id="selectmovie">
                     <option name="selectmovie" v-for="items in film" :key="items.length" :value="items.movieId">{{items.movieTitle}}</option>
                 </select>
@@ -44,23 +44,21 @@
                 <button type="submit">Submit</button>
             </form>
         </div>
-        <!-- <div v-if="selectedwindows.rediger == true">
-            <form v-if="hallFound == false" class="opretform" v-on:submit.prevent="checkHall">
-                <label for="hallCheck">Hall ID:</label>
-                <input type="text" id="hallCheck" name="hallCheck">
+        <div v-if="selectedwindows.rediger == true">
+            <form v-if="theaterFound == false" class="opretform" v-on:submit.prevent="checkTheater">
+                <label for="theaterCheck">Theater ID:</label>
+                <input type="text" id="theaterCheck" name="theaterCheck">
                 <button type="submit">Submit</button>
             </form>
 
-            <form v-if="hallFound" class="opretform" v-on:submit.prevent="editHalls">
-                <label for="qty">Hall plads:</label>
-                <input v-model="editHall.qty" type="text" id="qty" name="qty">
-
-                <label for="availabel">Hall ledig:</label>
-                <input v-model="editHall.availabel" type="text" required id="availabel" name="availabel">
-
+            <form v-if="theaterFound" class="opretform" v-on:submit.prevent="editTheater">
+                <label for="selectmovie">Movie Title:</label>
+                <select name="selectmovie" id="selectmovie">
+                    <option name="selectmovie" v-for="items in film" :key="items.length" :value="items.movieId">{{items.movieTitle}}</option>
+                </select>
                 <button type="submit">Submit</button>
             </form>
-        </div> -->
+        </div>
         <div style="color:white" v-if="selectedwindows.seAlle == true">
             <div v-for="item in theaters" :key="item.length">
                 {{'Theater ID: ' + item.theaterId}}<br>
@@ -84,15 +82,14 @@ export default {
         const toast = useToast();
         const state = useStore();
 
-        let hallFound = ref(false);
+        let theaterFound = ref(false);
         let theaters = ref([]);
         let halls = ref([]);
         let film = ref([])
 
-        let editHall = reactive({
-            id: 0,
-            qty: '',
-            availabel: ''
+        let editTheaters = reactive({
+            theaterId: 0,
+            movieId: 0
         })
 
         let selectedwindows = reactive({
@@ -275,6 +272,48 @@ export default {
             }
         }
 
+        function checkTheater(e) {
+            var form = e.target;
+            const options = {
+                headers: {'x-access-token': state.state.token}
+            };
+
+            axios.get('http://localhost:3000/theater/' + form.theaterCheck.value, options)
+            .then(response => {
+                console.log(response)
+                if (response.data.status === "OK") {
+                    toast.success("Hall fundet!");
+                    editTheaters.theaterId = response.data.response.theaterId;
+                    editTheaters.movieId = response.data.response.movieId;
+                    theaterFound.value = true
+                    return true
+                }else{
+                    toast.error("Hall findes ikke!");
+                    theaterFound.value = false
+                    return false
+                }
+            })
+        }
+
+        function editTheater(e) {
+            var form = e.target;
+            const options = {
+                headers: {'x-access-token': state.state.token}
+            };
+
+            axios.put('http://localhost:3000/theater/' + editTheaters.theaterId, {
+                movieId: form.selectmovie.value,
+            }, options).then(resp => {
+                console.log(resp)
+                if (resp.data.status == "OK") {
+                    return toast.success("Theater opdateret!")
+                }
+                toast.error(resp.data.message);
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+
         function getAllTheater() {
             const options = {
                 headers: {'x-access-token': state.state.token}
@@ -312,7 +351,7 @@ export default {
             getAllTheater()
         })
 
-        return { selectedwindows, windowToggler, createTheater, hallFound, editHalls, editHall, theaters, film, deleteTheater, halls }
+        return { selectedwindows, windowToggler, createTheater, editHalls, theaters, film, deleteTheater, halls, checkTheater, editTheater, theaterFound }
     }
 }
 </script>

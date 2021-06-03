@@ -15,6 +15,7 @@ router.get('/', async function(req, res, next) {
 router.get('/:id', async function(req, res, next) {
     await Theater.findOne({ where: {theaterId: req.params.id}})
     .then(response => {
+        console.log(req.params.id)
         res.send({response, status:"OK"})
     }).catch(err=> {
         res.send({err, status:"ERROR"})

@@ -169,7 +169,7 @@ export default {
             }, options).then(resp => {
                 console.log(resp)
                 if (resp.data.status == "OK") {
-                    return toast.success("Film opdateret!")
+                    return toast.success("Hall opdateret!")
                 }
                 toast.error(resp.data.message);
             }).catch(err => {
