@@ -62,10 +62,11 @@
             </form>
         </div> -->
         <div style="color:white" v-if="selectedwindows.seAlle == true">
-            <div v-for="item in halls" :key="item.length">
-                {{'Hall ID: ' + item.hallId}}<br>
-                {{'Hall plads: ' + item.qty}}<br>
-                {{'Hall ledig: ' + item.availability}}<br><br>
+            <div v-for="item in theaters" :key="item.length">
+                {{'Theater ID: ' + item.theaterId}}<br>
+                {{'Hall ledig: ' + item.hallId}}<br>
+                {{'Row Qty: ' + item.rowQty}}<br>
+                {{'Vip Row Qty: ' + item.vipRowQty}}<br><br>
                 <hr>
             </div>
         </div>
@@ -84,6 +85,7 @@ export default {
         const state = useStore();
 
         let hallFound = ref(false);
+        let theaters = ref([]);
         let halls = ref([]);
         let film = ref([])
 
@@ -153,7 +155,7 @@ export default {
 
             for (let i = 0; i < e.rowQty; i++) {
                     axios.post('http://localhost:3000/seats/', {
-                        seat: 10,
+                        seat: 5,
                         availability: 1,
                         theaterId: e.theaterId
                 }, options).then(resp => {
@@ -273,6 +275,21 @@ export default {
             }
         }
 
+        function getAllTheater() {
+            const options = {
+                headers: {'x-access-token': state.state.token}
+            };
+            axios.get('http://localhost:3000/theater', options)
+            .then(response => {
+                console.log(response)
+                if (response.data.status === "OK") {
+                    theaters.value = response.data.response
+                }else{
+                    return false
+                }
+            })
+        }
+
         function deleteTheater(e) {
             var form = e.target;
             const options = {
@@ -292,9 +309,10 @@ export default {
         onMounted(() => {
             getAllHall()
             getAllMovies()
+            getAllTheater()
         })
 
-        return { selectedwindows, windowToggler, createTheater, hallFound, editHalls, editHall, halls, film, deleteTheater }
+        return { selectedwindows, windowToggler, createTheater, hallFound, editHalls, editHall, theaters, film, deleteTheater }
     }
 }
 </script>

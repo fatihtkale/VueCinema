@@ -21,22 +21,49 @@
         <div style="clear:both"></div>
         <div class="seat-select">
             <form>
-                <ul>
+                <p style="color:white;">yellow border = VIP, non yellow = not vip</p>
+                <ul v-for="(items, i) in commonRows" :key="items.length">
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" id="1">
-                        <label for='1'><img src="@/assets/seaticon.png" alt="seat_icon"></label>
+                        <input class="seat" type="radio" name="selected-seat" :id="i+'A'">
+                        <label :for="i+'A'"><img src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" id="2">
-                        <label for='2'><img src="@/assets/seaticon.png" alt="seat_icon"></label>
+                        <input class="seat" type="radio" name="selected-seat" :id="i+'B'">
+                        <label :for="i+'B'"><img src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" id="3">
-                        <label for='3'><img src="@/assets/seaticon.png" alt="seat_icon"></label>
+                        <input class="seat" type="radio" name="selected-seat" :id="i+'C'">
+                        <label :for="i+'C'"><img src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" id="4">
-                        <label for='4'><img src="@/assets/seaticon.png" alt="seat_icon"></label>
+                        <input class="seat" type="radio" name="selected-seat" :id="i+'D'">
+                        <label :for="i+'D'"><img src="@/assets/seaticon.png" alt="seat_icon"></label>
+                    </li>
+                    <li>
+                        <input class="seat" type="radio" name="selected-seat" :id="i+'E'">
+                        <label :for="i+'E'"><img src="@/assets/seaticon.png" alt="seat_icon"></label>
+                    </li>
+                </ul>
+                <ul v-for="(items, i) in vipRows" :key="items.length">
+                    <li>
+                        <input class="seat" type="radio" name="selected-seat" :id="i+'VIPA'">
+                        <label :for="i+'VIPA'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
+                    </li>
+                    <li>
+                        <input class="seat" type="radio" name="selected-seat" :id="i+'VIPB'">
+                        <label :for="i+'VIPB'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
+                    </li>
+                    <li>
+                        <input class="seat" type="radio" name="selected-seat" :id="i+'VIPC'">
+                        <label :for="i+'VIPC'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
+                    </li>
+                    <li>
+                        <input class="seat" type="radio" name="selected-seat" :id="i+'VIPD'">
+                        <label :for="i+'VIPD'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
+                    </li>
+                    <li>
+                        <input class="seat" type="radio" name="selected-seat" :id="i+'VIPE'">
+                        <label :for="i+'VIPE'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                 </ul>
             </form>
@@ -47,15 +74,17 @@
 <script>
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import axios from 'axios';
 import { useStore } from 'vuex'
+import axios from 'axios';
 import dayjs from 'dayjs'
 
 export default {
     name: 'movie',
     setup(){
         let movie = ref({});
-        let hall = ref({});
+        let theater = {};
+        let commonRows = ref();
+        let vipRows = ref();
         const route = useRoute()
         const state = useStore();
 
@@ -63,25 +92,41 @@ export default {
             headers: {'x-access-token': state.state.token}
         };
 
-        onMounted(()=>{
-            axios.get('http://localhost:3000/film/movie/' + route.params.id, options)
+        onMounted(async () => {
+            await axios.get('http://localhost:3000/film/movie/' + route.params.id, options)
             .then(response => {
                 movie.value = response.data.result;
                 movie.value.movieNextShow = dayjs(movie.value.movieNextShow).date() + "/" + (dayjs(movie.value.movieNextShow).month().valueOf() + 1) + "/" + dayjs(movie.value.movieNextShow).year() + " " + dayjs(movie.value.movieNextShow).hour() + ":" + dayjs(movie.value.movieNextShow).minute()
-                console.log(movie.value)
             }).catch(error => {
                 console.log(error)
             })
             // Get Theater connected to movie
-            axios.get('http://localhost:3000/theater', options)
+            await axios.get('http://localhost:3000/theater', options)
             .then(response => {
-                
+                for (let i = 0; i < response.data.response.length; i++) {
+                    const e = response.data.response[i];
+                    if (e.movieId == route.params.id) {
+                        theater = e;
+                    }
+                }
             }).catch(error => {
                 console.log(error)
             })
-        })
+            //getRows
+            await axios.get('http://localhost:3000/seats/' + theater.theaterId, options)
+            .then(response => {
+                commonRows.value = response.data.result
+                console.log(commonRows.value)
+            })
 
-        return { movie }
+            await axios.get('http://localhost:3000/vipseats/' + theater.theaterId, options)
+            .then(response => {
+                vipRows.value = response.data.result
+                console.log(vipRows.value)
+            })
+        })
+        
+        return { movie, commonRows, vipRows }
     }
 }
 </script>
