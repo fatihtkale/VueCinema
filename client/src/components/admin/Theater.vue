@@ -38,8 +38,8 @@
             </form>
         </div>
         <div v-if="selectedwindows.slet == true">
-            <form class="opretform" v-on:submit.prevent="deleteHall">
-                <label for="id">Hall ID:</label>
+            <form class="opretform" v-on:submit.prevent="deleteTheater">
+                <label for="id">Theater ID:</label>
                 <input type="text" id="id" name="id">
                 <button type="submit">Submit</button>
             </form>
@@ -175,7 +175,7 @@ export default {
                 })
             }
             editHallsQty(e)
-            toast.success("Created seats");
+            toast.success("Sæder oprettet");
         }
 
         async function getAmountOfVipSeats(e) {
@@ -219,7 +219,7 @@ export default {
                 qty: await getAmountOfSeats(e) + await getAmountOfVipSeats(e),
             }, options).then(resp => {
                 if (resp.data.status == "OK") {
-                    return toast.success("Hall opdateret!")
+                    return toast.success("Sæder opdateret!")
                 }
                 toast.error(resp.data.message);
             }).catch(err => {
@@ -273,12 +273,28 @@ export default {
             }
         }
 
+        function deleteTheater(e) {
+            var form = e.target;
+            const options = {
+                headers: {'x-access-token': state.state.token}
+            };
+            axios.delete("http://localhost:3000/theater/"+form.id.value, options)
+            .then(response => {
+                if (response.data.status === "OK") {
+                    return toast.success("Theater slettet!")
+                }
+                return toast.success("Error theater findes ikke!")
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+
         onMounted(() => {
             getAllHall()
             getAllMovies()
         })
 
-        return { selectedwindows, windowToggler, createTheater, hallFound, editHalls, editHall, halls, film }
+        return { selectedwindows, windowToggler, createTheater, hallFound, editHalls, editHall, halls, film, deleteTheater }
     }
 }
 </script>

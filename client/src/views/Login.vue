@@ -39,7 +39,7 @@ export default {
           console.log(response);
           toast.success("Logged in!")
           router.push("/")
-        }else {
+        } else {
           toast.error(response.data.status)
         }
       }).catch(error => {

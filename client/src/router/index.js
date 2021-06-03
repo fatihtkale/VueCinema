@@ -4,6 +4,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Admin from '../views/Admin.vue'
 import Movies from '../views/Movies.vue'
+import Movie from '../views/Movie.vue'
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/movies',
     name: 'Movies',
     component: Movies
+  },
+  {
+    path: '/movie/:id',
+    name: 'Movie',
+    component: Movie
   },
 ]
 

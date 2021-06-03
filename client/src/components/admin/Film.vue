@@ -40,7 +40,7 @@
                 <input type="text" id="age" name="age">
 
                 <label for="nextshow">Film næste show:</label>
-                <input name="nextshow" id="nextshow" style="margin: 0; display:flex; margin-top: 10px;" type="date">
+                <input name="nextshow" id="nextshow" placeholder="date and time (MM/DD/YYYY HH:MM)" type="text">
 
                 <button type="submit">Submit</button>
             </form>
@@ -106,7 +106,6 @@ import { useToast } from "vue-toastification";
 import { useStore } from 'vuex'
 import { onMounted, reactive, ref } from 'vue'
 import dayjs from 'dayjs'
-
 export default {
     setup(){
         const toast = useToast();
@@ -146,7 +145,7 @@ export default {
                 genre: form.genre.value,
                 release: form.release.value,
                 age: form.age.value,
-                nextshow: form.nextshow.value,
+                nextshow: dayjs(form.nextshow.value),
                 banner: form.banner.value
             }, options).then(resp => {
                 if (resp.data.status == "OK") {

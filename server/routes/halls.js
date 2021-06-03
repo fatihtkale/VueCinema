@@ -38,7 +38,7 @@ router.put('/:id', async function(req, res, next) {
     await Hall.findOne({where:{ hallId: req.params.id }})
     .then(async function(hall) {
         if (hall == null) { 
-            return res.send({ message:"Film findes ikke!", status: "ERROR" })
+            return res.send({ message:"hall findes ikke!", status: "ERROR" })
         }
         await Hall.update({
             qty: req.body.qty,

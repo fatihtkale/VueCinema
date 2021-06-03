@@ -3,10 +3,12 @@
 	<div v-if="movies.length > 0">
 		<div class="movies">
 			<div class="movie" v-for="items in movies" :key="items.length">
-				<img :src="items.movieBanner" alt="movie">
-				<div class="moviebottom">
-					<p style="margin-top:8px;">{{items.movieTitle}}</p>
-					<p style="margin-top:8px;color:#404040;">{{items.movieReleaseYear}}</p>
+				<div @click="goToMovie" :id="items.movieId">
+					<img :src="items.movieBanner" alt="movie" :id="items.movieId">
+					<div class="moviebottom" :id="items.movieId">
+						<p style="margin-top:8px;" :id="items.movieId">{{items.movieTitle}}</p>
+						<p style="margin-top:8px;color:#404040;" :id="items.movieId">{{items.movieReleaseYear}}</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -45,7 +47,12 @@ export default {
 			})
 		})
 
-		return { movies }
+		function goToMovie(e) {
+			router.push(`/movie/${e.target.id}`)
+			console.log(e.target.id);
+		}
+
+		return { movies, goToMovie}
 	}
 }
 </script>

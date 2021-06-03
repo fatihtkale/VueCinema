@@ -28,6 +28,18 @@ router.get('/:title', async function(req, res, next) {
     })
 });
 
+router.get('/movie/:id', async function(req, res, next) {
+    await Movies.findOne({ where: { movieId: req.params.id }})
+    .then(function(result){
+        if (result != null) {
+            return res.send({status: "OK", result})
+        }
+        res.send({ status: "error" })
+    }).catch(function(err){
+        return res.send({err})
+    })
+});
+
 router.post('/', async function(req, res, next) {
     await Movies.findOne({where:{ movieTitle: req.body.title }})
     .then(async function(movie) {
