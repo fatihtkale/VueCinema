@@ -312,7 +312,7 @@ export default {
             getAllTheater()
         })
 
-        return { selectedwindows, windowToggler, createTheater, hallFound, editHalls, editHall, theaters, film, deleteTheater }
+        return { selectedwindows, windowToggler, createTheater, hallFound, editHalls, editHall, theaters, film, deleteTheater, halls }
     }
 }
 </script>

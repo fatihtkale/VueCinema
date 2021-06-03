@@ -66,6 +66,7 @@
                         <label :for="i+'VIPE'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                 </ul>
+                <button class="button" type="submit">Buy</button>
             </form>
         </div>
     </div>
@@ -132,6 +133,17 @@ export default {
 </script>
 
 <style scoped>
+.button {
+    width: 100%;
+    background-color: #59CB7F;
+    border: 2px solid #51B973;
+    border-radius: 5px;
+    padding: 13px 0;
+    color: white;
+    font-size: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}
 .seat-select {
     margin-top: 25px;
     background-color: #202020;
