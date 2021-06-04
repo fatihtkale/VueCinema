@@ -20,50 +20,54 @@
         </div>
         <div style="clear:both"></div>
         <div class="seat-select">
-            <form>
-                <p style="color:white;">yellow border = VIP, non yellow = not vip</p>
+            <form v-on:submit.prevent="onSubmit">
+                <p style="color:white;text-align:center">yellow border = VIP, non yellow = not vip</p>
+                <div>
+
+                <img class="theater" src="@/assets/theater.png" alt="theater">
+                </div>
                 <ul v-for="(items, i) in commonRows" :key="items.length">
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" :id="i+'A'">
+                        <input :value="i+'A'" v-model="selectedSeat" class="seat" type="radio" name="selectedseat" :id="i+'A'">
                         <label :for="i+'A'"><img src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" :id="i+'B'">
+                        <input :value="i+'B'" v-model="selectedSeat" class="seat" type="radio" name="selectedseat" :id="i+'B'">
                         <label :for="i+'B'"><img src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" :id="i+'C'">
+                        <input :value="i+'C'" v-model="selectedSeat" class="seat" type="radio" name="selectedseat" :id="i+'C'">
                         <label :for="i+'C'"><img src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" :id="i+'D'">
+                        <input :value="i+'D'" v-model="selectedSeat" class="seat" type="radio" name="selectedseat" :id="i+'D'">
                         <label :for="i+'D'"><img src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" :id="i+'E'">
+                        <input :value="i+'E'" v-model="selectedSeat" class="seat" type="radio" name="selectedseat" :id="i+'E'">
                         <label :for="i+'E'"><img src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                 </ul>
                 <ul v-for="(items, i) in vipRows" :key="items.length">
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" :id="i+'VIPA'">
-                        <label :for="i+'VIPA'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
+                        <input :value="i+'VA'" v-model="selectedSeat" class="seat" type="radio" name="selectedseat" :id="i+'VA'">
+                        <label :for="i+'VA'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" :id="i+'VIPB'">
-                        <label :for="i+'VIPB'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
+                        <input :value="i+'VB'" v-model="selectedSeat" class="seat" type="radio" name="selectedseat" :id="i+'VB'">
+                        <label :for="i+'VB'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" :id="i+'VIPC'">
-                        <label :for="i+'VIPC'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
+                        <input :value="i+'VC'" v-model="selectedSeat" class="seat" type="radio" name="selectedseat" :id="i+'VC'">
+                        <label :for="i+'VC'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" :id="i+'VIPD'">
-                        <label :for="i+'VIPD'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
+                        <input :value="i+'VD'" v-model="selectedSeat" class="seat" type="radio" name="selectedseat" :id="i+'VD'">
+                        <label :for="i+'VD'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                     <li>
-                        <input class="seat" type="radio" name="selected-seat" :id="i+'VIPE'">
-                        <label :for="i+'VIPE'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
+                        <input :value="i+'VE'" v-model="selectedSeat" class="seat" type="radio" name="selectedseat" :id="i+'VE'">
+                        <label :for="i+'VE'"><img style="border: 2px solid yellow;border-radius:8px;" src="@/assets/seaticon.png" alt="seat_icon"></label>
                     </li>
                 </ul>
                 <button class="button" type="submit">Buy</button>
@@ -76,6 +80,7 @@
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
+import { useToast } from "vue-toastification";
 import axios from 'axios';
 import dayjs from 'dayjs'
 
@@ -86,8 +91,10 @@ export default {
         let theater = {};
         let commonRows = ref();
         let vipRows = ref();
+        let selectedSeat = ref();
         const route = useRoute()
         const state = useStore();
+        const toast = useToast();
 
         const options = {
             headers: {'x-access-token': state.state.token}
@@ -117,22 +124,49 @@ export default {
             await axios.get('http://localhost:3000/seats/' + theater.theaterId, options)
             .then(response => {
                 commonRows.value = response.data.result
-                console.log(commonRows.value)
             })
 
             await axios.get('http://localhost:3000/vipseats/' + theater.theaterId, options)
             .then(response => {
                 vipRows.value = response.data.result
-                console.log(vipRows.value)
             })
         })
+
+        function onSubmit(e){
+            var form = e.target;
+            const options = {
+                headers: {'x-access-token': state.state.token}
+            };
+            axios.get('http://localhost:3000/ticket/' + form.selectedseat.value, options)
+            .then(function(response) {
+                if (response.data.response) {
+                    toast.error("Seat already taken!")
+                }else{
+                    axios.post('http://localhost:3000/ticket',{
+                        hallId: theater.hallId,
+                        movieId: theater.movieId,
+                        theaterId: theater.theaterId,
+                        rowId: form.selectedseat.value.split('')[0],
+                        seat: form.selectedseat.value.split('')[1],
+                    }, options).then(function(result) {
+                        toast.success("Seat bought!")
+                    })
+                }
+            })
+        }
         
-        return { movie, commonRows, vipRows }
+        return { movie, commonRows, vipRows, selectedSeat, onSubmit}
     }
 }
 </script>
 
 <style scoped>
+.theater {
+    width: 100%;
+    padding: 20px 50px;
+    display: block !important;
+    margin: 0 auto;
+}
 .button {
     width: 100%;
     background-color: #59CB7F;
@@ -152,6 +186,9 @@ export default {
 }
 .seat-select ul {
     list-style-type: none;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
 }
 .seat-select li {
     display: inline;

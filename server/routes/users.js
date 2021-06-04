@@ -3,7 +3,6 @@ var router = express.Router();
 const dayjs = require('dayjs') 
 const bcrypt = require('bcryptjs');
 const authjwt = require('../auth')
-
 const { Op } = require("sequelize");
 
 var { User, Userlogin } = require('../models')

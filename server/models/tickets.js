@@ -8,7 +8,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   tickets.init({
-    ticketId: DataTypes.STRING,
+    ticketId: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
     hallId: DataTypes.STRING,
     movieId: DataTypes.STRING,
     theaterId: DataTypes.STRING,

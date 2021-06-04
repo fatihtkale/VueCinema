@@ -13,6 +13,7 @@ var hallsRouter = require('./routes/halls');
 var seatsRouter = require('./routes/seats');
 var theaterRouter = require('./routes/theater');
 var vipSeatsRouter = require('./routes/vipseats');
+var ticketRouter = require('./routes/ticket');
 var jwtValidateRouter = require('./routes/jwtValidate');
 
 var app = express();
@@ -32,6 +33,7 @@ app.use('/halls', [authjwt.verifyToken], hallsRouter);
 app.use('/seats', [authjwt.verifyToken], seatsRouter);
 app.use('/vipseats', [authjwt.verifyToken], vipSeatsRouter);
 app.use('/theater', [authjwt.verifyToken], theaterRouter);
+app.use('/ticket', [authjwt.verifyToken], ticketRouter);
 app.use('/validatetoken', /*[authjwt.verifyToken]*/ jwtValidateRouter);
 
 module.exports = app;

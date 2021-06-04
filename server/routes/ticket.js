@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const { Op } = require("sequelize");
 
 var { Tickets } = require('../models')
 
@@ -12,8 +13,8 @@ router.get('/', async function(req, res, next) {
     })
 });
 
-router.get('/:id', async function(req, res, next) {
-    await Theater.findOne({ where: {theaterId: req.params.id}})
+router.get('/:seat', async function(req, res, next) {
+    await Tickets.findOne({ where: {[Op.and]:[ {rowId: req.params.seat.split('')[0]}, {seat: req.params.seat.split('')[1]} ]}})
     .then(response => {
         console.log(req.params.id)
         res.send({response, status:"OK"})
@@ -23,11 +24,12 @@ router.get('/:id', async function(req, res, next) {
 });
 
 router.post('/', async function(req, res, next) {
-    await Theater.create({
-        rowQty: req.body.normalrow,
-        vipRowQty: req.body.viprow,
-        hallId: req.body.selecthall,
-        movieId: req.body.selectmovie
+    await Tickets.create({
+        hallId: req.body.hallId,
+        movieId: req.body.movieId,
+        theaterId: req.body.theaterId,
+        rowId: req.body.rowId,
+        seat: req.body.seat
     }).then(result => {
         return res.send({result, status: "OK"})
     }).catch(err => {
@@ -36,19 +38,20 @@ router.post('/', async function(req, res, next) {
 });
 
 router.put('/:id', async function(req, res, next) {
-    await Theater.findOne({where:{ theaterId: req.params.id }})
-    .then(async function(theater) {
-        if (theater == null) { 
-            return res.send({ message:"Theater findes ikke!", status: "ERROR" })
+    await Tickets.findOne({where:{ ticketId: req.params.id }})
+    .then(async function(ticket) {
+        if (ticket == null) { 
+            return res.send({ message:"Ticket findes ikke!", status: "ERROR" })
         }
-        await Theater.update({
-            rowQty: req.body.qty,
-            vipRowQty: req.body.availabel,
-            hallId: req.body.theaterId,
-            movieId: req.body.movieId
+        await Tickets.update({
+            hallId: req.body.hallId,
+            movieId: req.body.movieId,
+            theaterId: req.body.theaterId,
+            rowId: req.body.rowId,
+            seat: req.body.seat
         }, { 
             where:{
-                theaterId: req.params.id
+                ticketId: req.params.id
             }
         }).then(resp => {
             res.send({ status: "OK" })
@@ -59,13 +62,13 @@ router.put('/:id', async function(req, res, next) {
 });
 
 router.delete('/:id', async (req, res, next) => {
-    await Theater.findOne({ where:{ theaterId: req.params.id }})
-    .then(async function(theater) {
-        if (!theater) {
-            return res.send({ message:"Theater findes ikke!", status: "ERROR" })
+    await Tickets.findOne({ where:{ ticketId: req.params.id }})
+    .then(async function(tickets) {
+        if (!tickets) {
+            return res.send({ message:"ticket findes ikke!", status: "ERROR" })
         }
-        await Theater.destroy({
-            where:{ theaterId: theater.theaterId }
+        await Tickets.destroy({
+            where:{ ticketId: tickets.ticketId }
         }).then(resp => {
             res.send({ status: "OK" })
         }).catch(error => {

@@ -13,6 +13,8 @@ router.get('/:id', async function(req, res, next) {
             return res.send({status: "OK", result})
         }
         return res.send({status: "ERROR"})
+    }).catch(err => {
+        console.log(err)
     })
 });
 
