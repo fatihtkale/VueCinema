@@ -1,8 +1,7 @@
 <template>
   <form class="form" v-on:submit.prevent="onSubmit">
+    <div class="login-icon">Tec & Chill</div>
     <div class="login-body">
-      <div class="login-icon">Tec & Chill</div>
-
       <input v-model="user.username" placeholder="Brugernavn" name="username" class="input-field" type="text">
 
       <input @blur="validateEmail" v-model="user.email" placeholder="Email" name="email" class="input-field" type="text">
@@ -15,7 +14,7 @@
 
       <input @focus="passwordVerify" v-model="user.password2" placeholder="indtast kodeord igen" class="input-field" type="password">
 
-      <p style="margin-left: 10px;">Fødselsdag<input v-model="user.date" name="birthday" style="margin: 0; display:flex; margin-top: 10px;" class="input-field" type="date"></p>
+      <input v-model="user.date" name="birthday" style="margin:0;margin-top:10px;width:100%;" class="input-field" type="date">
 
       <button class="button" v-if="checkALl" type="submit">Login</button>
       <button class="button red" v-else disabled type="submit">Login</button>
@@ -117,9 +116,10 @@ export default {
   font-family: 'Poppins', sans-serif;
   color: white;
   position: relative;
+  display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   align-content: center
 }
